@@ -9,7 +9,7 @@ class Planet:
 
 planets = [
     Planet(1, "Venus", "A planet that spins in the opposite direction", "orange"),
-    Planet(2, "Mars", "Dusty, Cold, Desered", "red"),
+    Planet(2, "Mars", "Dusty, Cold, Deserted", "red"),
     Planet(3, "Mercury", "The smallest planet", "many colors"),
 ]
 
