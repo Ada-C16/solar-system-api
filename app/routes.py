@@ -7,6 +7,14 @@ class Planet:
         self.description = description
         self.size_rank = size_rank
 
+    def to_dictionary(self):
+        return {
+                "id": self.id,
+                "name": self.name,
+                "description": self.description,
+                "size_rank": self.size_rank         
+            }
+
 planets = [
     Planet(20, "Jupiter", "Planet in the Milky Way", 1),
     Planet(21, "Saturn", "Planet in the Milky Way", 2),
@@ -25,23 +33,12 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def get_all_planets():
     response_list = []
     for planet in planets:
-        response_list.append(
-            {
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description,
-                "size_rank": planet.size_rank         
-            }
-        )
+        response_list.append(planet.to_dictionary())
     return jsonify(response_list) 
 
 @planets_bp.route("/<planet_id>", methods=["GET"],)
 def get_one_planet_by_id(planet_id):
     for planet in planets:
         if int(planet_id) == planet.id:
-            return {
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description,
-                "size_rank": planet.size_rank         
-            }
+            return planet.to_dictionary()
+
