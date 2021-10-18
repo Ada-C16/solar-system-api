@@ -18,7 +18,7 @@ PLANETS = [
     Planet(3, "Pluto", "Not sure if it's a real planet, but we like it", ["Charon"])
 ]
 
-@planets_bp.route("", methods=["GET"])
+@planets_bp.route("", methods=["GET"], strict_slashes=False)
 def get_planets():
     planets_response = []
     for planet in PLANETS:
@@ -30,3 +30,14 @@ def get_planets():
         })
     return jsonify(planets_response)
 
+@planets_bp.route("/<id>", methods=["GET"], strict_slashes=False)
+def get_planet(id):
+    id = int(id)
+    for planet in PLANETS:
+        if planet.id == id:
+            return {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "moons": planet.major_moons
+            }
