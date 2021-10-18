@@ -1,3 +1,5 @@
+# localhost:5000/
+
 from flask import Blueprint, jsonify
 
 
@@ -34,6 +36,4 @@ def get_planet(planet_id):
 
     for planet in PLANETS:
         if planet.id == planet_id:
-            return vars(planet_id)
-
-
+            return vars(planet)
