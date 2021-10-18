@@ -17,6 +17,7 @@ planets = [
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["GET"])
+
 def read_planets():
     planet_response = []
     for planet in planets:
@@ -27,3 +28,17 @@ def read_planets():
             "moon": planet.moon
         })
     return jsonify(planet_response)
+
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def read_single_planet(planet_id): 
+    planet_id = int(planet_id)
+    for planet in planets:
+        if planet.id == planet.id:
+            return {
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description,
+            "moon": planet.moon
+            }
+    
+
