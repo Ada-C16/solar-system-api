@@ -10,13 +10,15 @@ planet_list_bp = Blueprint("planet_list_bp", __name__, url_prefix="/planets")
 
 @planet_list_bp.route("", methods=["GET"])
 def handle_planets():
-    planet_response = []
+    planets_response = []
     for planet in planets:
-        planet_response.append(
-            {"id:" planet.id,
-            "name": planet.name,
-            "description": planet.description},
-            "type": planet.type
-            })
+        planets_response.append(
+            {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "type": planet.type,
+            }
+        )
+    return jsonify(planets_response)
     
-    return jsonify(planet_response)
