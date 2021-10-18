@@ -26,3 +26,15 @@ def get_planets():
             "sign": planet.sign
         })
     return jsonify(planets_response)
+
+@planets_bp.route("/<planet_name>", methods = ["GET"])
+def get_planet(planet_name):
+    for planet in planets:
+        if planet.name.lower() == planet_name.lower():
+            planet_response = {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "sign": planet.sign
+            }
+    return planet_response
