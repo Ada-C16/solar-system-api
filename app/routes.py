@@ -9,6 +9,6 @@ class Planet:
 
 planets=[
     Planet(1,"Sun", "center of the solar system", "orange"),
-    Planet(2, "Saturn", "it takes approx 29.5 years to complete its orbit","yellow"),
+    Planet(2, "Saturn", "takes approx 29.5 years to complete its orbit","yellow"),
     Planet(3, "Mercury", "rules communication", "light grey")
 ]
