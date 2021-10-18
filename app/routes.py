@@ -1,4 +1,9 @@
 from flask import Blueprint, jsonify
+import requests
+import time
+
+path = "https://api.le-systeme-solaire.net/rest.php/bodies"
+
 
 class Planet:
     def __init__(self, id, name, description, color):
@@ -39,3 +44,24 @@ def handle_planet(planet_id):
                 "description": planet.description,
                 "color": planet.color
             }
+
+def get_bodies():
+    query_params = {
+            "filter[]": "isPlanet,neq,false"
+        }
+
+    response = requests.get(path, params=query_params)
+    return response.json()
+
+
+print(get_bodies())
+
+
+"""
+Hey API
+Give me everything where isPlanet is True
+
+
+We want that to be returned and displayed
+
+"""
