@@ -28,3 +28,17 @@ def handle_planets():
             'color': planet.color
         })
     return jsonify(planets_response)
+
+@planet_bp.route('/<id>', methods=['GET'])
+def handle_single_planet(id):
+    for planet in planets:
+        if planet.id == id:
+            return jsonify({
+            'id': planet.id,
+            'name': planet.name,
+            'description': planet.description,
+            'color': planet.color
+            })
+    return 'Error: Planet ID not Found'    
+
+    
