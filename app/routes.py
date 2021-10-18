@@ -1,4 +1,4 @@
-# localhost:5000/
+# localhost:5000/   <-- add url endpoint/parameters here
 
 from flask import Blueprint, jsonify
 
