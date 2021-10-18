@@ -23,7 +23,7 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def get_list_planets():
     planets_list = []
     for planet in planets:
-        planets.append({
+        planets_list.append({
             "id": planet.id,
             "name": planet.name,
             "description": planet.description
