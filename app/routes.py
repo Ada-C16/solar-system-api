@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, render_template
 
 class Planet:
     def __init__(self, id, title, description, moon, picture):
@@ -47,3 +47,23 @@ def handle_planet(planet_id):
                 "moon":planet.moon, 
                 "picture": planet.picture
                 }
+
+@planets_bp.route("/picture/<planet_id>", methods=["GET"])
+def handle_planet_picture(planet_id):
+    for planet in planets:
+        if planet.id == int(planet_id):
+            return render_template('planet_picture.html', url=planet.picture)
+
+@planets_bp.route("/picturesummary/<planet_id>", methods=["GET"])
+def handle_planet_summary(planet_id):
+    for planet in planets:
+        if planet.id == int(planet_id):
+            if planet.moon == True:
+                moon = "Yes"
+            else:
+                moon = "No"
+            return render_template('planet_summary.html', 
+                    url=planet.picture, 
+                    title=planet.title,
+                    diameter=planet.description,
+                    moon=moon)
