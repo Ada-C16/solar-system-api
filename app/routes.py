@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 class Planet:
     def __init__(self, id, name, description, size_rank):
@@ -18,3 +18,20 @@ planets = [
     Planet(27, "Mercury", "Planet in the Milky Way", 8),
     Planet(28, "Pluto", "Planet in the Milky Way", 9),
 ]
+
+planets_bp = Blueprint("planets", __name__)
+
+@planets_bp.route("/planets", methods=["GET"])
+def get_all_planets():
+    response_list = []
+    for planet in planets:
+        response_list.append(
+            {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "size_rank": planet.size_rank         
+            }
+        )
+    return jsonify(response_list) 
+    # return response_list
