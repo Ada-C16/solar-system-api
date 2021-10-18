@@ -17,3 +17,5 @@ planets = [
     Planet(7, "Uranus", "BAHAHFABA UR ANUS", "15,759 mi radius"),
     Planet(8, "Neptune", "Pharrell's music group", "15,299 mi radius")
 ]
+
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
