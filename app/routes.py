@@ -47,21 +47,21 @@ def handle_planet(planet_id):
 
 def get_bodies():
     query_params = {
-            "filter[]": "isPlanet,neq,false"
+            "filter[]": "isPlanet,neq,false",
+            "data": "englishName"
         }
 
     response = requests.get(path, params=query_params)
     return response.json()
 
 
-print(get_bodies())
+# print(get_bodies())
 
-
-"""
-Hey API
-Give me everything where isPlanet is True
-
-
-We want that to be returned and displayed
-
-"""
+@planets_bp.route("/bodies", methods=["GET"])
+def handle_all_planets():
+    all_planets = get_bodies()
+    planet_names = []
+    for planet in all_planets["bodies"]:
+        print(planet["englishName"])
+        planet_names.append(planet["englishName"])
+    return jsonify(planet_names)
