@@ -19,22 +19,15 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def get_all_planets():
     planet_list=[]
     for planet in planets:
-        planet_list.append({"id" : planet.id,
-        "name":planet.name,
-        "description":planet.description,
-        "matter":planet.matter})
+        planet_list.append(vars(planet))
     return jsonify(planet_list)
 
 @planets_bp.route("/<planet_id>",methods=["GET"])
 def get_one_planet(planet_id):
+    if not planet_id.isdigit():
+        return("Not a number!")
     planet_id=int(planet_id)
     for planet in planets:
         if planet.id == planet_id:
-            return {"id" : planet.id,
-            "name":planet.name,
-            "description":planet.description,
-            "matter":planet.matter}
-
-#    return_value=vars(Planet)
-#    return jsonify(return_value)
-# make __dict__ in planet class to work with vars
+            return jsonify(vars(planet))
+    return ("Not Found!")
