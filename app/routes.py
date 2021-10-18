@@ -39,6 +39,15 @@ def get_planet_json():
 @solar_systems_bp.route("/<planet_id>", methods=["GET"])
 def get_each_planet_with_id(planet_id):
     planet_id = int(planet_id)
+    
+
     for planet in planets:
         if planet.id == planet_id:
             return jsonify(planet.return_planets())
+
+    return {
+        "error": (f"ID {planet_id} not exists"),
+        "status": "404"
+    },404 
+
+
