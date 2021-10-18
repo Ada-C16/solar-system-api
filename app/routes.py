@@ -19,9 +19,9 @@ planets = [
     Planet(28, "Pluto", "Planet in the Milky Way", 9),
 ]
 
-planets_bp = Blueprint("planets", __name__)
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("/planets", methods=["GET"])
+@planets_bp.route("/", methods=["GET"])
 def get_all_planets():
     response_list = []
     for planet in planets:
@@ -34,4 +34,14 @@ def get_all_planets():
             }
         )
     return jsonify(response_list) 
-    # return response_list
+
+@planets_bp.route("/<planet_id>", methods=["GET"],)
+def get_one_planet_by_id(planet_id):
+    for planet in planets:
+        if int(planet_id) == planet.id:
+            return {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "size_rank": planet.size_rank         
+            }
