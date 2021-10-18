@@ -38,7 +38,13 @@ def get_all_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET"],)
 def get_one_planet_by_id(planet_id):
+    if not planet_id.isdigit():
+         return {
+        "error": "Invalid planet id.",
+    }, 400 
     for planet in planets:
         if int(planet_id) == planet.id:
             return planet.to_dictionary()
-
+    return {
+        "error": "Planet not found.",
+    }, 404 
