@@ -29,6 +29,7 @@ def planet(planet_id):
         if planet.id == planet_id:
             return {
                 "id": planet.id,
-                "title": planet.name,
-                "description": planet.description
+                "name": planet.name,
+                "description": planet.description,
+                "type": planet.type,
             }
