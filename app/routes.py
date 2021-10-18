@@ -6,9 +6,9 @@ planets = [
     Planet(2, "Venus", "Venus is the second planet from the Sun.", "terrestrial")
 ]
 
-planet_list_bp = Blueprint("planet_list_bp", __name__, url_prefix="/planets")
+planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planets")
 
-@planet_list_bp.route("", methods=["GET"])
+@planet_bp.route("", methods=["GET"])
 def handle_planets():
     planets_response = []
     for planet in planets:
@@ -22,3 +22,13 @@ def handle_planets():
         )
     return jsonify(planets_response)
     
+@planet_bp.route("/<planet_id>", methods=["GET"])
+def planet(planet_id):
+    planet_id = int(planet_id)
+    for planet in planets:
+        if planet.id == planet_id:
+            return {
+                "id": planet.id,
+                "title": planet.name,
+                "description": planet.description
+            }
