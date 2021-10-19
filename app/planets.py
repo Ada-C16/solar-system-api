@@ -17,3 +17,12 @@ class Planet:
     @classmethod
     def increase_number_of_planets(Planet):
         Planet.number_of_planets += 1
+
+    # add some way to turn it into a dictionary easily
+    def create_planet_dictionary(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "has moons": self.has_moons
+        }
