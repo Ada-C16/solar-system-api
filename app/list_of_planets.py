@@ -1,6 +1,6 @@
 # create a list of planets array
 # fill out name, description, has moons boolean
-from planets import Planet
+from .planets import Planet
 
 planets = [
     Planet("Mercury", "Closest to the sun, hot.", False),
