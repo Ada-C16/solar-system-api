@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+import requests
 
 class Planet:
     def __init__(self, id, name, description, distance):
@@ -48,3 +49,30 @@ def get_one_planet(planet_id):
                 "status": 200
             }
     return jsonify(response)
+
+PATH = "https://api.le-systeme-solaire.net/rest/bodies?filter[]%3D=isPlanet,neq,false"
+
+bodies_bp = Blueprint("bodies", __name__, url_prefix="/bodies")
+@bodies_bp.route("", methods = ["GET"])
+def get_bodies():
+    i = 0
+    bodies_dict = {}
+    response = requests.get(PATH)
+    response_bodies = response.json()
+    for body in response_bodies["bodies"]:
+        bodies_dict[i] = {
+            "id": body["id"],
+            "english_name": body["englishName"],
+            "is_planet": body["isPlanet"]
+        }
+        i +=1
+    return bodies_dict
+
+@bodies_bp.route("/<id>", methods = ["GET"])
+def get_body_id(id):
+    id = str(id.lower())
+    response = requests.get(PATH)
+    response_bodies = response.json()
+    for body in response_bodies["bodies"]:
+        if id == body["id"] or id == body["englishName"]:
+            return jsonify(body)
