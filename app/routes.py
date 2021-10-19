@@ -39,7 +39,7 @@ def handle_planet(name):
             return "please enter a valid planet", 404
 
 
-@solarsystem_bp.route("/distance_from_sun", methods=["GET"])
+@solarsystem_bp.route("/max/distance_from_sun", methods=["GET"])
 def farest_planet():
     distances = [planet.distance_from_sun for planet in planets]   
     for planet in planets:
