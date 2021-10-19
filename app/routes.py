@@ -40,3 +40,5 @@ def get_planet(planet_id):
             "num_moons" : planet.num_moons
         }
             return jsonify(response)
+    
+    return 'Planet ID not found', 404
