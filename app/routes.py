@@ -7,6 +7,14 @@ class Planet:
         self.name = name
         self.description = description 
         self.moon = moon 
+    
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "moon": self.moon
+        }
 
 planets = [
     Planet(1, "Saturn", "A gassy, heavy, giant who's sixth from the sun. Most likely compposed of iron, nickel, and rock.", 82),
@@ -21,24 +29,17 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def read_planets():
     planet_response = []
     for planet in planets:
-        planet_response.append({
-            "id": planet.id,
-            "name": planet.name,
-            "description": planet.description,
-            "moon": planet.moon
-        })
+        planet_response.append(
+        planet.to_json()
+        )
     return jsonify(planet_response)
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def read_single_planet(planet_id): 
     planet_id = int(planet_id)
     for planet in planets:
-        if planet.id == planet.id:
-            return {
-            "id": planet.id,
-            "name": planet.name,
-            "description": planet.description,
-            "moon": planet.moon
-            }
+        if planet.id == planet_id:
+            return planet.to_json()
+        # consider writing conditional that returns
+        # a message if planet id does not exist. 
     
-
