@@ -1,6 +1,6 @@
 # localhost:5000/   <-- add url endpoint/parameters here
 
-from flask import Blueprint, jsonify
+from flask import Blueprint,jsonify
 
 
 class Planet():
@@ -21,11 +21,9 @@ class Planet():
 
 
 PLANETS = [
-
     Planet(426, "Nostromo's End", "Hostile weather.  Toxic atmosphere.  Evidence of civilization.", True),
     Planet(224, "JollyPlanet", "Okay. Decent. Will live for long time.", True)
-
-]
+    ]
 
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
