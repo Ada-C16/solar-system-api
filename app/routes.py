@@ -10,6 +10,15 @@ class Planet():
         self.description = description
         self.xenomorphs = xenomorphs
 
+    def to_json(self):
+        json_dict = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "xenomorphs": self.xenomorphs
+        }
+        return json_dict
+
 
 PLANETS = [
 
@@ -26,7 +35,7 @@ def get_all_planets():
     planets_response = []
 
     for planet in PLANETS:
-        planets_response.append(vars(planet))
+        planets_response.append(planet.to_json())
 
     return jsonify(planets_response)
 
@@ -36,4 +45,4 @@ def get_planet(planet_id):
 
     for planet in PLANETS:
         if planet.id == planet_id:
-            return vars(planet)
+            return planet.to_json()
