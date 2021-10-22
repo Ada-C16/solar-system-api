@@ -42,17 +42,3 @@ def planet(planet_id):
         "description": planet.description,
         "type": planet.type,
             }
-
-# @planet_bp.route("", methods=["POST"])
-# def create_planet():
-#     request_body = request.get_json()
-#     new_planet = Planet(name=request_body["name"],
-#                     description=request_body["description"],
-#                     type = request_body["type"],
-#                     )
-                    
-
-#     db.session.add(new_planet)
-#     db.session.commit()
-
-#     return make_response(f"Planet {new_planet.name} successfully created", 201)
