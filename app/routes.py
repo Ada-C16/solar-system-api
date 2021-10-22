@@ -55,13 +55,3 @@ def get_bodies():
 
 
 print(get_bodies())
-
-
-"""
-Hey API
-Give me everything where isPlanet is True
-
-
-We want that to be returned and displayed
-
-"""
