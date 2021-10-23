@@ -21,7 +21,4 @@ def create_app(test_config=None):
     from .routes import planets_bp
     app.register_blueprint(planets_bp)
 
-    from .routes import bodies_bp
-    app.register_blueprint(bodies_bp)
-
     return app
