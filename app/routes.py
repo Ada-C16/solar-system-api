@@ -6,7 +6,6 @@ planets_bp = Blueprint("Planet", __name__, url_prefix="/planets")
 
 
 # Helper Functions
-
 def valid_int(number, parameter_type):
     try:
         int(number)
@@ -77,4 +76,3 @@ def delete_planet(planet_id):
     db.session.delete(planet)
     db.session.commit()
     return make_response(f"Planet #{planet_id} is successfully deleted")
-    
