@@ -31,8 +31,10 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_planet(planet_id):
-    planet_id = int(planet_id)
-    for planet in planets:
-        if planet.id == planet_id:
-            return vars(planet)
-    return "Not found", 404
+    planet = Planet.query.get(planet_id) 
+    if planet == None:
+        return "Not found", 404
+    return planet.to_dict(), 200 
+    
+    
+    
