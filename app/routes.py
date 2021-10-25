@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, make_response, request
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 bodies_bp = Blueprint("bodies", __name__, url_prefix="/bodies")
 
+
 @planets_bp.route("", methods=["POST", "GET"])
 def handle_planets():
     if request.method == "POST":
@@ -13,7 +14,7 @@ def handle_planets():
             return make_response("Invalid Request", 400)
 
         new_planet = Planet(
-            id = request_body["id"],
+            id=request_body["id"],
             name=request_body["name"],
             description=request_body["description"],
             distance=request_body["distance"]
@@ -25,12 +26,12 @@ def handle_planets():
         planets = Planet.query.all()
         planets_response = [
             {"id": planet.id, "name": planet.name, "description": planet.description,
-            "distance": planet.distance} for planet in planets
+             "distance": planet.distance} for planet in planets
         ]
         return jsonify(planets_response)
 
 
-@planets_bp.route("/<planet_id>", methods = ["GET", "PUT", "DELETE"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT", "PATCH", "DELETE"])
 def get_one_planet(planet_id):
     planet = Planet.query.get(planet_id)
     if planet is None:
@@ -43,11 +44,23 @@ def get_one_planet(planet_id):
             "distance": planet.distance
         }
         return jsonify(response_body)
+
     elif request.method == "PUT":
         response_body = request.get_json()
         planet.name = response_body["name"]
         planet.description = response_body["description"]
         planet.distance = response_body["distance"]
+        db.session.commit()
+        return jsonify(f"{planet.name} was successfully updated"), 200
+
+    elif request.method == "PATCH":
+        response_body = request.get_json()
+        if "name" in response_body:
+            planet.name = response_body["name"]
+        elif "description" in response_body:
+            planet.description = response_body["description"]
+        elif "distance" in response_body:
+            planet.distance = response_body["distance"]
         db.session.commit()
         return jsonify(f"{planet.name} was successfully updated"), 200
 
