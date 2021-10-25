@@ -37,14 +37,23 @@ def get_planets():
         return f"Planet {new_planet.name} created.", 201
 
 
-# @planets_bp.route("/<planet_name>", methods = ["GET"])
-# def get_planet(planet_name):
-#     for planet in planets:
-#         if planet.name.lower() == planet_name.lower():
-#             planet_response = {
-#                 "id": planet.id,
-#                 "name": planet.name,
-#                 "description": planet.description,
-#                 "sign": planet.sign
-#             }
-#     return planet_response
+@planets_bp.route("/<planet_id>", methods = ["GET"])
+def get_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+    if planet is None:
+        return jsonify(f"Planet with ID {planet_id} not found.", 404)
+    # if request.method == "GET":
+    return {
+        "name": planet.name,
+        "description": planet.description,
+        "sign": planet.sign
+    }
+    # for planet in planets:
+    #     if planet.name.lower() == planet_name.lower():
+    #         planet_response = {
+    #             "id": planet.id,
+    #             "name": planet.name,
+    #             "description": planet.description,
+    #             "sign": planet.sign
+    #         }
+    # return planet_response
