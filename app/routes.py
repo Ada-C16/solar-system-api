@@ -14,7 +14,7 @@ def handle_planets():
 
     if request.method == "POST":
         request_body = request.get_json()
-        if "id" not in request_body or "name" not in request_body:
+        if "name" not in request_body:
             return make_response("Invalid Request", 400)
         new_planet = Planet(
             name=request_body['name'],
@@ -43,5 +43,5 @@ def get_planet(planet_id):
 
     if planet == None:
         return make_response("your planet ain't real.", 404)
-        
+
     return planet.to_json()
