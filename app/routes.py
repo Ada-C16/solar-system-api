@@ -30,3 +30,4 @@ def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
 
     return planet.to_json()
+
