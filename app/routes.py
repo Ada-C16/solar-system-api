@@ -6,7 +6,7 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 # Endpoint to create one planet or read all planets
 @planets_bp.route("", methods=["POST", "GET"])
-def create_planet():
+def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
 
