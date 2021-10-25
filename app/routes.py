@@ -33,27 +33,14 @@ def handle_planets():
             planet_list.append(planet.create_planet_dictionary())
         
         return jsonify(planet_list), 200
-# Able to take both Get and Post requests
-# If POST: set up a variable to hold request body 
-# Use variable to create new planet instance
-# Add to .db session
-# Comit db session
-# Return a response with a 201 status code
-# If GET: Query database, get all planets
-# Create planets as dictionaries, put in a list
-# Return jsonify list
-
-
-    # list_of_planets = []
-    # for planet in planets:
-    #     list_of_planets.append(planet.create_planet_dictionary()), 200
-    
-    # return jsonify(list_of_planets)
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def handle_planet(planet_id):
-    print(planet_id)
 
-    for planet in planets:
-        if int(planet_id) == planet.id:
-            return jsonify(planet.create_planet_dictionary())
+    planet_id = int(planet_id)
+    planet = Planet.query.get(planet_id)
+
+    if planet:
+        return jsonify(planet.create_planet_dictionary())
+
+    return { "Error" : f"Planet {planet_id} was not found."}, 404
