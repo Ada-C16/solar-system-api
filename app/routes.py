@@ -18,34 +18,34 @@ def get_planet_from_id(planet_id):
     return Planet.query.get_or_404(planet_id, description="{planet not found}")
 
 # Routes
-@planets_bp.route("", methods = ["GET", "POST"])
-def handle_planets():
+@planets_bp.route("", methods = ["GET"])
+def read_all_planets():
 
-    if request.method == "GET":
-        planets = Planet.query.all()
-        
-        planets_response = [planet.to_dict() for planet in planets]
+    planets = Planet.query.all()
+    
+    planets_response = [planet.to_dict() for planet in planets]
 
-        return jsonify(planets_response)
+    return jsonify(planets_response)
 
+@planets_bp.route("", methods = ["POST"])
+def create_planet():
 
-    elif request.method == "POST":
-        request_body = request.get_json()
-        if "name" not in request_body or "description" not in request_body or "distance_from_sun" not in request_body:
-            return make_response("Incomplete request body", 400)
+    request_body = request.get_json()
+    if "name" not in request_body or "description" not in request_body or "distance_from_sun" not in request_body:
+        return make_response("Incomplete request body", 400)
 
-        new_planet = Planet(name = request_body["name"],
-                        description = request_body["description"],
-                        distance_from_sun = request_body["distance_from_sun"])
-        
-        db.session.add(new_planet)
-        db.session.commit()
+    new_planet = Planet(name = request_body["name"],
+                    description = request_body["description"],
+                    distance_from_sun = request_body["distance_from_sun"])
+    
+    db.session.add(new_planet)
+    db.session.commit()
 
-        return make_response(f"New Planet {new_planet.name} created", 201)
+    return make_response(f"New Planet {new_planet.name} created", 201)
 
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
-def read_planet(planet_id):
+def read_one_planet(planet_id):
     planet = get_planet_from_id(planet_id)
 
     return planet.to_dict(), 200 
@@ -61,7 +61,7 @@ def update_planet(planet_id):
         planet.description = request_body["description"]
     if "distance_from_sun" in request_body:
         planet.distance_from_sun = request_body["distance_from_sun"]
-        
+
     db.session.commit()
     return jsonify(planet.to_dict())
 
