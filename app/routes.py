@@ -1,25 +1,9 @@
 from flask import Blueprint, jsonify, render_template, make_response, request
 from app import db
 from app.models.planet import Planet
+from jsonschema import validate
+import jsonschema
 
-# class Planet:
-#     def __init__(self, id, title, description, moon, picture):
-#         self.id = id
-#         self.title = title
-#         self.description = description
-#         self.moon = moon
-#         self.picture = picture
-
-# planets= [
-#     Planet(1, "Mercury", "Diameter: 3,031 miles (4,878 km)", False, "https://cdn.mos.cms.futurecdn.net/oU94fqcyf9HzQc59wJyaHN-970-80.jpg"), 
-#     Planet(2, "Venus", "Diameter: 7,521 miles (12,104 km)", False, "https://cdn.mos.cms.futurecdn.net/KhHofvaDG73pypCEzyLuab-970-80.png"),
-#     Planet(3, "Earth", "Diameter: 7,926 miles (12,760 km)", True, "https://cdn.mos.cms.futurecdn.net/4aeTmiqCqpRKuFc8tkDcmm-970-80.jpg"),
-#     Planet(4, "Mars", "Diameter: 4,217 miles (6,787 km)", True, "https://cdn.mos.cms.futurecdn.net/tQUhJUq9GXqMfZXjGYdw8c-970-80.jpg"), 
-#     Planet(5, "Jupiter", "Diameter: 86,881 miles (139,822 km)", True, "https://cdn.mos.cms.futurecdn.net/WyxFYsiUAQAgU4peSSoBNZ-970-80.png"), 
-#     Planet(6, "Saturn", "Diameter: 74,900 miles (120,500 km)", True, "https://cdn.mos.cms.futurecdn.net/bDVqRSjnbY9jMyVPmStUBY-970-80.png"),
-#     Planet(7, "Uranus", "Diameter: 31,763 miles (51,120 km)", True, "https://cdn.mos.cms.futurecdn.net/kZXxHS85dDgVEAviQrM2KW-970-80.jpg"),
-#     Planet(8, "Neptune", "Diameter: 30,775 miles (49,530 km)", True, "https://cdn.mos.cms.futurecdn.net/KW2AU72GRriUXQvsn5jAbg-970-80.jpg")
-# ]
 
 planets_bp = Blueprint("planets_bp", __name__,url_prefix="/planets")
 
@@ -49,34 +33,38 @@ def handle_dog(planet_id):
             "picture": planet.picture},200
     return { "Error": f"Planet {planet_id} was not found"}, 404
     
-@planets_bp.route("/<planet_id>", methods=["GET"])
-def handle_planet(planet_id):
-    for planet in planets:
-        if planet.id == int(planet_id):
-            return {
-                "id": planet.id,
-                "title": planet.title,
-                "description": planet.description,
-                "moon":planet.moon, 
-                "picture": planet.picture
-                }
+@planets_bp.route("", methods=["POST"])
+def create_planet():
+    request_data = request.get_json()
+
+    if "name" not in request_data or "moons" not in request_data \
+        or "diameter" not in request_data or "picture" not in request_data:
+        return jsonify({"message": "Missing data"}), 400
+    
+    new_planet = Planet(name=request_data["name"], diameter=request_data["diameter"], 
+                moons=request_data["moons"], picture=request_data["picture"])
+
+    db.session.add(new_planet)
+    db.session.commit()
+
+    return f"Planet {new_planet.name} created", 201
 
 @planets_bp.route("/picture/<planet_id>", methods=["GET"])
 def handle_planet_picture(planet_id):
-    for planet in planets:
-        if planet.id == int(planet_id):
-            return render_template('planet_picture.html', url=planet.picture)
+    planet = Planet.query.get(planet_id)
+    if planet:
+        return render_template('planet_picture.html', url=planet.picture)
+    return jsonify({"message": "Planet does not exist"}), 400
 
 @planets_bp.route("/picturesummary/<planet_id>", methods=["GET"])
 def handle_planet_summary(planet_id):
-    for planet in planets:
-        if planet.id == int(planet_id):
-            if planet.moon == True:
-                moon = "Yes"
-            else:
-                moon = "No"
-            return render_template('planet_summary.html', 
+    planet = Planet.query.get(planet_id)
+    if planet.moons == True:
+        moon = "Yes"
+    else:
+        moon = "No"
+    return render_template('planet_summary.html', 
                     url=planet.picture, 
-                    title=planet.title,
-                    diameter=planet.description,
+                    title=planet.name,
+                    diameter=planet.diameter,
                     moon=moon)
