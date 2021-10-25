@@ -4,18 +4,32 @@ from flask import Blueprint, jsonify, request, make_response
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("", methods=["POST"], strict_slashes=False)
+@planets_bp.route("", methods=["POST", "GET"], strict_slashes=False)
 def handle_planets():
-    request_body = request.get_json()
-    new_planet = Planet(
-                name=request_body["name"],
-                description=request_body["description"],
-                size_rank=request_body["size_rank"]
-                )
-    db.session.add(new_planet)
-    db.session.commit()
+    if request.method == "POST":
+        request_body = request.get_json()
+        new_planet = Planet(
+                    name=request_body["name"],
+                    description=request_body["description"],
+                    size_rank=request_body["size_rank"]
+                    )
+        db.session.add(new_planet)
+        db.session.commit()
 
-    return make_response(f"Planet {new_planet.name} successfully created", 201)
+        return make_response(f"Planet {new_planet.name} successfully created", 201)
+    
+    elif request.method == "GET":
+        planet_objects = Planet.query.all() # returning list of objects
+        response_list = []
+        for planet in planet_objects:
+            response_list.append(
+                {
+                    "name": planet.name,
+                    "description": planet.description,
+                    "size_rank": planet.size_rank
+                }
+            )
+        return jsonify(response_list), 200
 
 # def get_all_planets():
 #     response_list = []
