@@ -1,37 +1,32 @@
-from flask import Blueprint, jsonify
-
-class Planet:
-    def __init__(self, id, name, description, size):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.size = size
-
-planets = [
-    Planet(1, "Mercury", "closest planet to the sun", "1,516 mi radius"),
-    Planet(2, "Venus", "the girl planet", "3,760 mi radius"),
-    Planet(3, "Earth", "our planet", "3,959 mi radius"),
-    Planet(4, "Mars", "the red planet", "2,106 mi radius"),
-    Planet(5, "Jupiter", "the largest planet", "43,441 mi radius"),
-    Planet(6, "Saturn", "the ringed plannet", "36,184 mi radius"),
-    Planet(7, "Uranus", "BAHAHFABA UR ANUS", "15,759 mi radius"),
-    Planet(8, "Neptune", "Pharrell's music group", "15,299 mi radius")
-]
+from app import db
+from app.models.planet import Planet
+from flask import Blueprint, jsonify, make_response, request
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("", methods=['GET'])
+@planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
-    planets_response = [vars(planet) for planet in planets]
-    return jsonify(planets_response)
+    if request.method == "GET":
+        planets = Planet.query.all()
+        planets_response = []
+        for planet in planets:
+            planets_response.append({
+                planet.to_json()
+            })
+        return jsonify(planets_response)
+    
+    elif request.method == "POST":
+        request_body = request.get_json()
+        new_planet = Planet(name=request_body["name"],
+                        description=request_body["description"])
 
-@planets_bp.route("/<planet_id>", methods=['GET'])
-def handle_one_planet(planet_id):
-    planet_id = int(planet_id)
-    for planet in planets:
-        if planet.id == planet_id:
-            return {
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description
-            }
+        db.session.add(new_planet)
+        db.session.commit()
+
+        return make_response(f"Planet {new_planet.name} successfully created", 201)
+
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def handle_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+
+    return planet.to_json()
