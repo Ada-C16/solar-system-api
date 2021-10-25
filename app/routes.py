@@ -16,11 +16,13 @@ def handle_planets():
         request_body = request.get_json()
         if "name" not in request_body:
             return make_response("Invalid Request", 400)
+            
         new_planet = Planet(
             name=request_body['name'],
             description=request_body['description'],
             #xenomorphs=request_body['']
         )
+
         db.session.add(new_planet) #like git, stagging changes
         db.session.commit() #committing to database
 
@@ -38,8 +40,7 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_planet(planet_id):
-    planet_id = int(planet_id)
-    planet = Planet.query.all(planet_id)
+    planet = Planet.query.get(planet_id)
 
     if planet == None:
         return make_response("your planet ain't real.", 404)
