@@ -24,21 +24,11 @@ def handle_planets():
 
         for planet in planets:
             planets_response.append(planet.to_dict())
-            
+
         return make_response(jsonify(planets_response), 200)
-# @planet_bp.route('', methods=['GET'])
-# def handle_planets():
-#     planets = Planet.query.all()
-#     planets_response = list()
 
-#     for planet in planets:
-#         planets_response.append(planet.to_dict())
-#     return jsonify(planets_response)
-
-# @planet_bp.route('/<id>', methods=['GET'])
-# def handle_single_planet(id):
-#     for planet in planets:
-#         if planet.id == id:
-#             return jsonify(planet.to_dict())
-#     return 'Error: Planet ID not Found'    
-
+@planet_bp.route('/<id>', methods=['GET'])
+def handle_single_planet(id):
+    if request.method == 'GET':
+        planet = Planet.query.get(id)
+        return make_response(jsonify(planet.to_dict()), 200)
