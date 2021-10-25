@@ -3,27 +3,8 @@
 from flask import Blueprint,jsonify
 
 
-class Planet():
-    def __init__(self, id, name, description, xenomorphs=False):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.xenomorphs = xenomorphs
-
-    def to_json(self):
-        json_dict = {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "xenomorphs": self.xenomorphs
-        }
-        return json_dict
 
 
-PLANETS = [
-    Planet(426, "Nostromo's End", "Hostile weather.  Toxic atmosphere.  Evidence of civilization.", True),
-    Planet(224, "JollyPlanet", "Okay. Decent. Will live for long time.", True)
-    ]
 
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
