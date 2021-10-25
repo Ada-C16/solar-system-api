@@ -1,4 +1,4 @@
-from app import routes, db
+from app import db
 
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

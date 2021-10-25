@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-db = SQLAlchemy
+db = SQLAlchemy()
 migrate = Migrate()
 DATABASE = 'postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_development'
 
@@ -10,7 +10,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABSE_URI'] = DATABASE
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE
 
     db.init_app(app)
     migrate.init_app(app,db)
