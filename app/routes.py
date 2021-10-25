@@ -36,7 +36,19 @@ def handle_planets():
             "picture": planet.picture})
     return jsonify(planets_response), 200
     
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def handle_dog(planet_id):
+    planet_id = int(planet_id)
+    planet = Planet.query.get(planet_id)
 
+    if planet:
+        return {"id": planet.id, 
+            "name": planet.name,
+            "diameter": planet.diameter,
+            "moons": planet.moons,
+            "picture": planet.picture},200
+    return { "Error": f"Planet {planet_id} was not found"}, 404
+    
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def handle_planet(planet_id):
     for planet in planets:
