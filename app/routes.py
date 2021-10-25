@@ -21,16 +21,26 @@ planets_bp = Blueprint("Planet", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods = ["GET", "POST"])
 def handle_planets():
-    request_body = request.get_json()
 
-    new_planet = Planet(name = request_body["name"],
-                    description = request_body["description"],
-                    distance_from_sun = request_body["distance_from_sun"])
-    
-    db.session.add(new_planet)
-    db.session.commit()
+    if request.method == "GET":
+        planets = Planet.query.all()
+        
+        planets_response = [planet.to_dict() for planet in planets]
 
-    return make_response(f"New Planet {new_planet.name} created", 201)
+        return jsonify(planets_response)
+
+
+    elif request.method == "POST":
+        request_body = request.get_json()
+
+        new_planet = Planet(name = request_body["name"],
+                        description = request_body["description"],
+                        distance_from_sun = request_body["distance_from_sun"])
+        
+        db.session.add(new_planet)
+        db.session.commit()
+
+        return make_response(f"New Planet {new_planet.name} created", 201)
 
 
 # def handle_planets():

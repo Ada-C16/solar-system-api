@@ -9,8 +9,8 @@ class Planet(db.Model):
 
     def to_dict(self):
         return {
-            "id" : self.id,
-            "name" : self.name,
-            "description" : self.description,
-            "distance_from_sun" : self.distance_from_sun
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "distance_from_sun": self.distance_from_sun
         }
