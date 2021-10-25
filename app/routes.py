@@ -2,10 +2,10 @@ from app import db
 from app.models.planet import Planet
 from flask import Blueprint, jsonify, make_response, request
 
-planets_db = Blueprint("planets_db", __name__, url_prefix="/planets")
+planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 
-@planets_db.route("", methods=["POST", "GET"])
+@planets_bp.route("", methods=["POST", "GET"])
 def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
@@ -34,20 +34,42 @@ def handle_planets():
         return jsonify(planets_response)
 
 
-@planets_db.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(planet_id):
 
     planet = Planet.query.get(planet_id)
 
-    if planet is None:
-        return make_response(f"Planet {planet_id} Not Found", 404)
+    if request.method == "GET":
 
-    return {
-        "id": planet.id,
-        "name": planet.name,
-        "description": planet.description
-    }
+        if planet is None:
+            return make_response(f"Planet {planet_id} Not Found", 404)
 
+        return {
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description
+        }
+
+    elif request.method == "PUT":
+        form_data = request.get_json()
+
+        if planet is None:
+            return make_response(f"Planet {planet_id} Not Found", 404)
+
+        planet.name = form_data["name"]
+        planet.description = form_data["description"]
+
+        db.session.commit()
+
+        return jsonify(f"Planet #{planet.id} sucessfully updated", 200)
+
+    elif request.method == "DELETE":
+        if planet is None:
+            return make_response(f"Planet {planet_id} Not Found", 404)
+
+        db.session.delete(planet)
+        db.session.commit()
+        return jsonify(f"Planet #{planet.id} sucessfully deleted", 200)
 
 # class Planet:
 #     def __init__(self, id, name, description):
