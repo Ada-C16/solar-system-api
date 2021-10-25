@@ -5,6 +5,7 @@ from app import db
 
 planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planets")
 
+
 @planet_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     if request.method == "GET":
@@ -14,7 +15,7 @@ def handle_planets():
             planets_response.append(
                 {
                     "id": planet.id,
-                    "name": planet.name,
+                    "title": planet.title,
                     "description": planet.description,
                     "type": planet.type,
                 }
@@ -23,22 +24,38 @@ def handle_planets():
 
     elif request.method == "POST":
         request_body = request.get_json()
-        new_planet = Planet(name=request_body["name"],
-                    description=request_body["description"],
-                    type = request_body["type"],
-                    )
+        new_planet = Planet(title=request_body["title"],
+                            description=request_body["description"],
+                            type=request_body["type"],
+                            )
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(f"Planet {new_planet.name} successfully created", 201)
+        return make_response(f"Planet {new_planet.title} successfully created", 201)
 
-@planet_bp.route("/<planet_id>", methods=["GET"])
+
+@planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def planet(planet_id):
     planet = Planet.query.get(planet_id)
 
-    return {
-        "id": planet.id,
-        "name": planet.name,
-        "description": planet.description,
-        "type": planet.type,
-            }
+    if request.method == "GET":
+        return {
+            "id": planet.id,
+            "title": planet.title,
+            "description": planet.description,
+            "type": planet.type,
+        }
+    elif request.method == "PUT":
+        form_data = request.get_json()
+
+        planet.title = form_data["title"]
+        planet.description = form_data["description"]
+        planet.type = form_data["type"]
+
+        db.session.commit()
+        return make_response(f"Planet #{planet.id} successfully updated")
+
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet #{planet.id} successfully deleted")
