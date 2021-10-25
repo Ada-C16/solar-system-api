@@ -10,9 +10,9 @@ def handle_planets():
         planets = Planet.query.all()
         planets_response = []
         for planet in planets:
-            planets_response.append({
+            planets_response.append(
                 planet.to_json()
-            })
+            )
         return jsonify(planets_response)
     
     elif request.method == "POST":
