@@ -15,7 +15,7 @@ def handle_planets():
             planets_response.append(
                 {
                     "id": planet.id,
-                    "title": planet.title,
+                    "name": planet.name,
                     "description": planet.description,
                     "type": planet.type,
                 }
@@ -24,31 +24,31 @@ def handle_planets():
 
     elif request.method == "POST":
         request_body = request.get_json()
-        new_planet = Planet(title=request_body["title"],
+        new_planet = Planet(name=request_body["name"],
                             description=request_body["description"],
                             type=request_body["type"],
                             )
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(f"Planet {new_planet.title} successfully created", 201)
+        return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 
-@planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
+@planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
 def planet(planet_id):
     planet = Planet.query.get(planet_id)
 
     if request.method == "GET":
         return {
             "id": planet.id,
-            "title": planet.title,
+            "name": planet.name,
             "description": planet.description,
             "type": planet.type,
         }
     elif request.method == "PUT":
         form_data = request.get_json()
 
-        planet.title = form_data["title"]
+        planet.name = form_data["name"]
         planet.description = form_data["description"]
         planet.type = form_data["type"]
 
@@ -59,3 +59,19 @@ def planet(planet_id):
         db.session.delete(planet)
         db.session.commit()
         return make_response(f"Planet #{planet.id} successfully deleted")
+
+    elif request.method == "PATCH":
+        request_body = request.get_json()
+        
+        if planet is not None:
+            if "name" in request_body:
+                planet.name = request_body["name"]
+                db.session.commit()
+            if "description" in request_body:
+                planet.description = request_body["description"]
+                db.session.commit()
+
+            return jsonify(f"Planet # {planet.id} succesfully updated")
+
+        else:
+            return jsonify("Error: Planet # {planet.id} not found", 404)
