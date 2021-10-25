@@ -32,7 +32,7 @@ def get_planets():
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
     planet_id = int(planet_id)
-    planet = Planet.query.get(planet_id)
+    planet = Planet.query.get_or_404(planet_id)
 
     return {
         "id": planet.id,
