@@ -29,23 +29,16 @@ def handle_planets():
                     "size_rank": planet.size_rank
                 }
             )
-        return jsonify(response_list), 200
+        return make_response(jsonify(response_list), 200)
 
-# def get_all_planets():
-#     response_list = []
-#     for planet in planets:
-#         response_list.append(planet.to_dictionary())
-#     return jsonify(response_list) 
 
-# @planets_bp.route("/<planet_id>", methods=["GET"],)
-# def get_one_planet_by_id(planet_id):
-#     if not planet_id.isdigit():
-#         return {
-#         "error": "Invalid planet id.",
-#     }, 400 
-#     for planet in planets:
-#         if int(planet_id) == planet.id:
-#             return planet.to_dictionary()
-#     return {
-#         "error": "Planet not found.",
-#     }, 404 
+@planets_bp.route("/<planet_id>", methods=["GET"],)
+def get_one_planet_by_id(planet_id):
+    # requested_planet = Planet.query.filter_by(id=planet_id).first()
+    requested_planet = Planet.query.get(planet_id)
+    return make_response({
+        "name": requested_planet.name,
+        "description": requested_planet.description,
+        "size_rank": requested_planet.size_rank
+    }, 200)
+
