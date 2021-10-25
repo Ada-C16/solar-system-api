@@ -9,7 +9,6 @@ migrate = Migrate()
 # set the database connection string
 DATABASE_CONNECTION_STRING = 'postgresql+psycopg2://postgres:postgres@localhost:5432/our_universe'
 
-
 def create_app(test_config=None):
     app = Flask(__name__)
 
