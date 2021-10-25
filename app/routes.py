@@ -37,14 +37,17 @@ def handle_planets():
 @planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
 def planet(planet_id):
     planet = Planet.query.get(planet_id)
-
+    if planet is None:
+        return jsonify(f"Error: Planet {planet.id} not found", 404)
+    
     if request.method == "GET":
         return {
             "id": planet.id,
             "name": planet.name,
             "description": planet.description,
             "type": planet.type,
-        }
+            }
+    
     elif request.method == "PUT":
         form_data = request.get_json()
 
@@ -53,25 +56,21 @@ def planet(planet_id):
         planet.type = form_data["type"]
 
         db.session.commit()
-        return make_response(f"Planet #{planet.id} successfully updated")
+        return jsonify(f"Planet #{planet.id} successfully updated")
 
     elif request.method == "DELETE":
         db.session.delete(planet)
         db.session.commit()
-        return make_response(f"Planet #{planet.id} successfully deleted")
+        return jsonify(f"Planet #{planet.id} successfully deleted")
 
     elif request.method == "PATCH":
         request_body = request.get_json()
         
-        if planet is not None:
-            if "name" in request_body:
-                planet.name = request_body["name"]
-                db.session.commit()
-            if "description" in request_body:
-                planet.description = request_body["description"]
-                db.session.commit()
+        if "name" in request_body:
+            planet.name = request_body["name"]
+            db.session.commit()
+        if "description" in request_body:
+            planet.description = request_body["description"]
+            db.session.commit()
 
-            return jsonify(f"Planet # {planet.id} succesfully updated")
-
-        else:
-            return jsonify("Error: Planet # {planet.id} not found", 404)
+        return jsonify(f"Planet # {planet.id} succesfully updated")
