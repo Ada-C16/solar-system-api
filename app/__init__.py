@@ -5,17 +5,6 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
-
-# def create_app(test_config=None):
-#     app = Flask(__name__)
-
-#     from .routes import solar_systems_bp
-#     app.register_blueprint(solar_systems_bp)
-
-    
-
-#     return app
-
 def create_app(test_config=None):
     app = Flask(__name__)
 
@@ -29,7 +18,7 @@ def create_app(test_config=None):
     from .routes import solar_systems_bp
     app.register_blueprint(solar_systems_bp)
 
-    # from app.models.planet import Planet
+    from app.models.planet import Planet
 
     return app
 
