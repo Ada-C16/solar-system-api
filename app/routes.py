@@ -1,19 +1,19 @@
 from flask import Blueprint, jsonify
 
-class Planet:
-    def __init__(self, id, name, description, color):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.color = color
+# class Planet:
+#     def __init__(self, id, name, description, color):
+#         self.id = id
+#         self.name = name
+#         self.description = description
+#         self.color = color
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'color': self.color
-            }
+#     def to_dict(self):
+#         return {
+#             'id': self.id,
+#             'name': self.name,
+#             'description': self.description,
+#             'color': self.color
+#             }
 
 planets = [
     Planet('4fr', 'Earth', 'Only known life planet', 'blue'),
