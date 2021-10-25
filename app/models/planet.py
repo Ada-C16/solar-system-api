@@ -1,11 +1,10 @@
-from app import routes
+from app import routes, db
 
-class Planet:
-    def __init__(self, id, name, description, matter):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.matter = matter
+class Planet(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
+    matter = db.Column(db.String)
     
     def make_dict(self):
         return {"id": self.id,

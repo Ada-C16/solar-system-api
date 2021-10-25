@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, make_response, request
 from app.models.planet import Planet
+from app import db
 
 # planets = [Planet(1, "Mercury", "small and red", "solid"),     
 # Planet(5, "Jupiter", "big and swirly", "gaseous"), 
