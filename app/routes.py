@@ -8,7 +8,8 @@ planets_bp = Blueprint("planet", __name__, url_prefix="/planets")
 def create_planet():
     request_body = request.get_json()
     new_planet = Planet(name=request_body["name"],
-                        description=request_body["description"])
+                        description=request_body["description"],
+                        moons=request_body["moons"])
 
     db.session.add(new_planet)
     db.session.commit()
@@ -31,12 +32,11 @@ def get_planets():
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
     planet_id = int(planet_id)
-    planets = Planet.query.all()
-    for planet in planets:
-        if planet.id == planet_id:
-            return {
-            "id": planet.id,
-            "name": planet.name, 
-            "description": planet.description,
-            "moons": planet.moons
+    planet = Planet.query.get(planet_id)
+
+    return {
+        "id": planet.id,
+        "name": planet.name, 
+        "description": planet.description,
+        "moons": planet.moons
         }
