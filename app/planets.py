@@ -18,3 +18,4 @@ class Planet:
             "description": self.description,
             "has moons": self.has_moons
         }
+
