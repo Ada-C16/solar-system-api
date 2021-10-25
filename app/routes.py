@@ -9,20 +9,28 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
-        if "name" not in request_body or "description" not in request_body or "has_moons" not in request_body:
-            return jsonify({"message": "Missing information - you need name, description, and if the planet has moons."}), 400
 
-        new_planet = Planet(name = request_body["name"], description = request_body["description"], has_moons = request_body["has_moons"])
+        if type(request_body) == list:
+            for planet in request_body:
+                new_planet = Planet(name = planet["name"], description = planet["description"], has_moons = planet["has_moons"])
 
-        db.session.add(new_planet)
-        db.session.commit()
+                db.session.add(new_planet)
+                db.session.commit()
+        else:
+            new_planet = Planet(name = request_body["name"], description = request_body["description"], has_moons = request_body["has_moons"])
+            if "name" not in request_body or "description" not in request_body or "has_moons" not in request_body:
+                return jsonify({"message": "Missing information - you need name, description, and if the planet has moons."}), 400
 
-        return f"New Planet {new_planet.name} Added!", 201
+            db.session.add(new_planet)
+            db.session.commit()
+
+        return f"New Planets Added!", 201
+
     elif request.method == "GET":
         planets = Planet.query.all()
         planet_list = []
         for planet in planets:
-            planet_list.append(planet.create_planet_dictionary)
+            planet_list.append(planet.create_planet_dictionary())
         
         return jsonify(planet_list), 200
 # Able to take both Get and Post requests
@@ -44,6 +52,8 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def handle_planet(planet_id):
+    print(planet_id)
+
     for planet in planets:
         if int(planet_id) == planet.id:
             return jsonify(planet.create_planet_dictionary())
