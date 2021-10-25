@@ -6,6 +6,12 @@ class Planet:
         self.name = name
         self.description = description
         self.matter = matter
+    
+    def make_dict(self):
+        return {"id": self.id,
+        "name": self.name,
+        "description": self.description,
+        "matter": self.matter}
 
 
 planets = [Planet(1, "Mercury", "small and red", "solid"),     
@@ -19,15 +25,16 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def get_all_planets():
     planet_list=[]
     for planet in planets:
-        planet_list.append(vars(planet))
+        planet_list.append(planet.make_dict())
     return jsonify(planet_list)
 
 @planets_bp.route("/<planet_id>",methods=["GET"])
 def get_one_planet(planet_id):
-    if not planet_id.isdigit():
+    try:
+        planet_id=int(planet_id)
+    except:
         return("Not a number!")
-    planet_id=int(planet_id)
     for planet in planets:
         if planet.id == planet_id:
-            return jsonify(vars(planet))
+            return jsonify(planet.make_dict())
     return ("Not Found!")
