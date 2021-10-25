@@ -2,21 +2,52 @@ from app import db
 from app.models.planet import Planet
 from flask import Blueprint, jsonify, make_response, request
 
-planets_db = Blueprint("planets_db", __name__, url_prefix= "/planets")
+planets_db = Blueprint("planets_db", __name__, url_prefix="/planets")
 
-@planets_db.route("", methods = ["POST"])
+
+@planets_db.route("", methods=["POST", "GET"])
 def handle_planets():
-    request_body = request.get_json()
-    if "name" not in request_body or "description" not in request_body:
-        return make_response("Invalid request", 400)
-    
-    new_planet = Planet(
-        name = request_body["name"],
-        description = request_body["description"]
-    )
-    db.session.add(new_planet)
-    db.session.commit()
-    return make_response(f"Planet {new_planet.name} created successfully", 201)
+    if request.method == "POST":
+        request_body = request.get_json()
+        if "name" not in request_body or "description" not in request_body:
+            return make_response("Invalid request", 400)
+
+        new_planet = Planet(
+            name=request_body["name"],
+            description=request_body["description"]
+        )
+        db.session.add(new_planet)
+        db.session.commit()
+
+        return make_response(f"Planet {new_planet.name} created successfully", 201)
+
+    elif request.method == "GET":
+        planets = Planet.query.all()
+        planets_response = []
+        for planet in planets:
+            planets_response.append({
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description
+            })
+
+        return jsonify(planets_response)
+
+
+@planets_db.route("/<planet_id>", methods=["GET"])
+def handle_planet(planet_id):
+
+    planet = Planet.query.get(planet_id)
+
+    if planet is None:
+        return make_response(f"Planet {planet_id} Not Found", 404)
+
+    return {
+        "id": planet.id,
+        "name": planet.name,
+        "description": planet.description
+    }
+
 
 # class Planet:
 #     def __init__(self, id, name, description):
