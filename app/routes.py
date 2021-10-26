@@ -12,13 +12,14 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 def handle_planets():
     request_body = request.get_json()
+
     if request.method == "POST":
         if "name" not in request_body:
             return make_response("Invalid Request", 400)
             
         new_planet = Planet(
             name=request_body['name'],
-            description=request_body['description'],
+            #description=request_body['description'],
             #xenomorphs=request_body['']
         )
 
@@ -28,7 +29,6 @@ def handle_planets():
         return make_response(f"Your planet, {new_planet.name}, has been created.", 201)
 
     elif request.method == "GET":
-
         planets = Planet.query.all()
         planets_response = []
 
