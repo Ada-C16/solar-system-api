@@ -27,7 +27,7 @@ def handle_planets():
 
         return make_response(jsonify(planets_response), 200)
 
-@planet_bp.route('/<id>', methods=['GET', 'PUT', 'DELETE'])
+@planet_bp.route('/<id>', methods=['GET', 'PUT'])
 def handle_single_planet(id):
     planet = Planet.query.get(id)
     if not planet:
@@ -37,12 +37,10 @@ def handle_single_planet(id):
         response_body = planet.to_dict()
         return make_response(jsonify(response_body), 200)
     elif request.method == 'PUT':
-        request_body = request.get_json()
+        request_body = requet.get_json()
         planet.name=request_body["name"]
         planet.description=request_body["description"]
-        planet.color=request_body["color"]
-
-        db.session.commit()
+        planet.color=request_body["description"]
 
         return make_response(f"Planet id {planet.id} updated successfully", 200)
     elif request.method == 'DELETE':
