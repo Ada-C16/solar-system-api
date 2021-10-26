@@ -30,6 +30,16 @@ def read_planets():
             )
         return jsonify(planets_response)
 
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def read_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        return {"error": "planet_id must be an int"}, 400
+
+    planet = Planet.query.get(planet_id)
+    return planet.to_dict()
+
     # planet_response = []
     # for planet in planets:
     #     planet_response.append(
