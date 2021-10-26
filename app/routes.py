@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, make_response, request
 planets_bp = Blueprint("planet", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["POST", "GET"])
-def handle_planet():
+def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
         new_planet = Planet(name=request_body["name"],
@@ -21,12 +21,7 @@ def handle_planet():
         planets = Planet.query.all()
         planets_response = []
         for planet in planets: 
-            planets_response.append({
-                "id": planet.id,
-                "name": planet.name, 
-                "description": planet.description,
-                "moons": planet.moons
-            })
+            planets_response.append(planet.to_dict())
         return jsonify(planets_response)
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
@@ -35,12 +30,7 @@ def handle_one_planet(planet_id):
     planet = Planet.query.get_or_404(planet_id)
 
     if request.method == "GET":
-        return {
-            "id": planet.id,
-            "name": planet.name, 
-            "description": planet.description,
-            "moons": planet.moons
-            }
+        return jsonify(planet.to_dict()), 200
     
     elif request.method == "PUT": 
         form_data = request.get_json()
