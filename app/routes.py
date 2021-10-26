@@ -19,9 +19,10 @@ def create_planet():
             response.append(planet.to_dict())
         return jsonify(response), 200
 
-@planets_bp.route("/<id>", methods=["GET", "PUT"], strict_slashes=False)
+@planets_bp.route("/<id>", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
 def get_planet(id):
     id = int(id)
+    planet = Planet.query.get(id)
     if request.method == "GET":
         planets = Planet.query.all()
         for planet in planets:
@@ -29,12 +30,15 @@ def get_planet(id):
                 return planet.to_dict(), 200
     elif request.method == "PUT":
         request_body = request.get_json()
-        planet = Planet.query.get(id)
         planet.name = request_body["name"]
         planet.description = request_body["description"]
         planet.biggest_moon = request_body["biggest_moon"]
         db.session.commit()
         return make_response(f'planet {id} succesfully updated')
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f'planet {id} successfully deleted')
         
 
 
