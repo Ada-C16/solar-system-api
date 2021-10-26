@@ -34,13 +34,18 @@ def handle_planets():
         
         return jsonify(planet_list), 200
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "DELETE"])
 def handle_planet(planet_id):
 
     planet_id = int(planet_id)
     planet = Planet.query.get(planet_id)
 
-    if planet:
+    if not planet:
+        return { "Error" : f"Planet {planet_id} was not found."}, 404
+    if request.method == "GET":    
         return jsonify(planet.create_planet_dictionary())
-
-    return { "Error" : f"Planet {planet_id} was not found."}, 404
+    elif request.method == "DELETE":
+        Planet.query.delete(planet)
+        db.session.commit()
+        return jsonify({"Message": f"Success! Planet with {planet_id} was destroyed!"})
+        
