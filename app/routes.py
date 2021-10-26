@@ -18,6 +18,8 @@ def handle_planets():
 
     elif request.method == "POST":
         request_body = request.get_json()
+        if "name" not in request_body or "description" not in request_body or "distance_from_sun" not in request_body:
+            return make_response("Incomplete request body", 400)
 
         new_planet = Planet(name = request_body["name"],
                         description = request_body["description"],
