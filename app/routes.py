@@ -4,24 +4,32 @@ from flask import Blueprint, jsonify, make_response, request
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("", methods=["POST"])
+@planets_bp.route("", methods=["POST", "GET"])
 def read_planets():
     if request.method == "POST":
         request_body = request.get_json()
         if "name" not in request_body or "description" not in request_body:
-            return make_response("Invalid Request", 400)
+            return {"error": "Incomplete request body"}, 400
+
         new_planet = Planet(
             name=request_body["name"],
             description=request_body["description"]
+            # moon=request_body["moon"]
         )
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(
-            # We are specifcyig 201 for something created. Otherwsie 200 is the default.
-            f"Book {new_planet.title} created", 201
-        )
-    
+        return make_response(f"Planet {new_planet.name} created!", 201)
+
+    elif request.method == "GET":
+        planets = Planet.query.all()
+        planets_response = []
+        for planet in planets:
+            planets_response.append(
+                planet.to_dict()
+            )
+        return jsonify(planets_response)
+
     # planet_response = []
     # for planet in planets:
     #     planet_response.append(
