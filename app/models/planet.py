@@ -6,10 +6,7 @@ class Planet(db.Model):
     description = db.Column(db.String)
     color = db.Column(db.String)
 
-
-
-
-def return_planets(self):
+    def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,

@@ -1,35 +1,9 @@
 
 from app import db
 from app.models.planet import Planet
-from flask import Blueprint, jsonify, make_response, request
-
-# class Planet:
-#     def __init__(self, id, name, description, color):
-#         self.id = id
-#         self.name = name 
-#         self.description = description
-#         self.color = color
+from flask import Blueprint, jsonify, make_response, request, abort
     
-# def return_planets(self):
-#         return {
-#             "id": self.id,
-#             "name": self.name,
-#             "description": self.description,
-#             "color": self.color  
-#         }
-        
-
-# planets = [
-#     Planet(1,"Mercury", "hot", "brown"), 
-#     Planet(2, "Venus", "pretty", "redish brown"),
-#     Planet(3, "Earth", "wet", "greenis blue"),
-#     Planet(6, "Saturn", "rings", "purple and yellow" )
-
-# ]
-    
-
 solar_systems_bp = Blueprint("planets", __name__, url_prefix="/planets")
-
 
 @solar_systems_bp.route("", methods=["GET", "POST"])
 def handle_planets():
@@ -57,37 +31,42 @@ def handle_planets():
         return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 
-@solar_systems_bp.route("/<planet_id>", methods=["GET"])
-def handle_planet(planet_id):
+
+def get_planet_from_id(planet_id):
     try:
         planet_id = int(planet_id)
     except:
-        return {"error": "dog_id must be an integer"},400
-        
-    planet = Planet.query.get(planet_id)
+        abort(make_response({"error": "planet_id must be an integer"},400)) 
+    return Planet.query.get_or_404(planet_id, description = "{planet not found}")
+
+
+@solar_systems_bp.route("/<planet_id>", methods=["GET"])
+def read_planet(planet_id):
+    planet = get_planet_from_id(planet_id)
 
     return planet.to_dict()
-# @solar_systems_bp.route("", methods=["GET", "POST"])
-# def get_planet_json():
-#     planet_response = []
-#     for planet in planets:
-#         planet_response.append(
-#             planet.return_planets()
-#         )
-#     return jsonify(planet_response)
-
-# @solar_systems_bp.route("/<planet_id>", methods=["GET"])
-# def get_each_planet_with_id(planet_id):
-#     planet_id = int(planet_id)
-    
-
-#     for planet in planets:
-#         if planet.id == planet_id:
-#             return jsonify(planet.return_planets())
-
-#     return {
-#         "error": (f"ID {planet_id} not exists"),
-#         "status": "404"
-#     },404 
 
 
+@solar_systems_bp.route("/<planet_id>", methods=["PATCH"])
+def update_planet(planet_id):
+    planet = get_planet_from_id(planet_id)
+    request_body = request.get_json()
+
+
+    if "name" in request_body:
+        planet.name = request_body["name"]
+    if "color" in request_body:
+        planet.color = request_body["color"]
+
+    db.session.commit()
+    return jsonify(planet.to_dict())
+
+
+@solar_systems_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    planet = get_planet_from_id(planet_id)
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return jsonify(planet.to_dict())
