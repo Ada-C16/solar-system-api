@@ -17,17 +17,20 @@ def handle_planets():
         db.session.commit()
 
         return make_response(f'Planet {planet_to_add.name} successfully created', 201)
+
     elif request.method == 'GET':
         planets = Planet.query.all()
         planets_response = []
+
         for planet in planets:
             planets_response.append(planet.to_dict())
-        return jsonify(planets_response)
 
-# @planet_bp.route('/<id>', methods=['GET'])
-# def handle_single_planet(id):
-#     for planet in planets:
-#         if planet.id == id:
-#             return jsonify(planet.to_dict())
-#     return 'Error: Planet ID not Found'    
+        return make_response(jsonify(planets_response), 200)
+
+@planet_bp.route('/<id>', methods=['GET'])
+def handle_single_planet(id):
+    if request.method == 'GET':
+        planet = Planet.query.get(id)
+        response_body = planet.to_dict()
+        return make_response(jsonify(response_body), 200)
 
