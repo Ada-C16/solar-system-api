@@ -11,9 +11,8 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 @planets_bp.route("", methods=["GET", "POST"])
 
 def handle_planets():
-
+    request_body = request.get_json()
     if request.method == "POST":
-        request_body = request.get_json()
         if "name" not in request_body:
             return make_response("Invalid Request", 400)
             
