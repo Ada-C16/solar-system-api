@@ -5,7 +5,7 @@ from app import db
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.giroute("", methods=["GET", "POST"])
+@planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
@@ -44,3 +44,4 @@ def handle_planet(planet_id):
         return jsonify(planet.create_planet_dictionary())
 
     return { "Error" : f"Planet {planet_id} was not found."}, 404
+
