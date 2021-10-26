@@ -30,9 +30,10 @@ def handle_planets():
 @planet_bp.route('/<id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_single_planet(id):
     planet = Planet.query.get(id)
-    if request.method == 'GET':
-        if not planet:
+    if not planet:
             return make_response(f'Planet not found', 404)
+            
+    if request.method == 'GET':
         response_body = planet.to_dict()
         return make_response(jsonify(response_body), 200)
     elif request.method == 'PUT':
