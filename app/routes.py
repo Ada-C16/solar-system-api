@@ -1,6 +1,6 @@
 # localhost:5000/   <-- add url endpoint/parameters here
 
-from flask import Blueprint,jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, abort
 from app.models.planet import Planet
 from app import db
 
@@ -8,23 +8,24 @@ from app import db
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 # @blueprint_name.route("/endpoint/path/here", methods=["GET"])
-@planets_bp.route("", methods=["GET", "POST"])
 
+
+@planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     request_body = request.get_json()
 
     if request.method == "POST":
         if "name" not in request_body:
             return make_response("Invalid Request", 400)
-            
+
         new_planet = Planet(
             name=request_body['name'],
-            #description=request_body['description'],
-            #xenomorphs=request_body['']
+            # description=request_body['description'],
+            # xenomorphs=request_body['']
         )
 
-        db.session.add(new_planet) #like git, stagging changes
-        db.session.commit() #committing to database
+        db.session.add(new_planet)  # like git, stagging changes
+        db.session.commit()  # committing to database
 
         return make_response(f"Your planet, {new_planet.name}, has been created.", 201)
 
@@ -37,11 +38,36 @@ def handle_planets():
 
         return jsonify(planets_response)
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "DELETE"])
 def get_planet(planet_id):
+    request_body = request.get_json()
     planet = Planet.query.get(planet_id)
 
-    if planet == None:
-        return make_response("your planet ain't real.", 404)
+    try:
+        planet_id = int(planet_id)
+    except:
+        abort(make_response({"error": "planet_id must be an int"}, 400))
 
-    return planet.to_json()
+    if request.method == 'GET':
+        if planet == None:
+            return make_response("your planet ain't real.", 404)
+        return planet.to_json()
+
+    elif request.method == 'PATCH':
+        if "id" in request_body:
+            planet.id = request_body["id"]
+        if "name" in request_body:
+            planet.name = request_body["name"]
+        if "description" in request_body:
+            planet.description = request_body["description"]
+        if "xenomorphs" in request_body:
+            planet.xenomorphs = request_body["xenomorphs"]
+
+        db.session.commit()
+        return jsonify(planet.to_json(), 201)
+        
+    elif request.method == 'DELETE':
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet #{planet_id} successfully destroyed.", 200)
