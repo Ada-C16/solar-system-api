@@ -52,3 +52,8 @@ def handle_one_planet(planet_id):
         db.session.commit()
 
         return make_response(f"Planet {planet.name} successfully updated")
+
+    elif request.method == "DELETE": 
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet {planet.name} successfully deleted")
