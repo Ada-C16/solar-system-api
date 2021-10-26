@@ -1,6 +1,6 @@
 from app import db
 from app.models.planet import Planet
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response, abort
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
@@ -35,7 +35,13 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "DELETE"],)
 def handle_single_planet(planet_id):
+    try: 
+        planet_id = int(planet_id)
+    except:
+        abort(make_response({"error": "planet_id must be an int"}, 400))
+    
     selected_planet = Planet.query.get_or_404(planet_id)
+    
     if request.method == "GET":
         return make_response({
             "id": selected_planet.id,
