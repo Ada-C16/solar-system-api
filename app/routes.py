@@ -4,13 +4,20 @@ from app.models.Planet import Planet
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("", methods=["POST"], strict_slashes=False)
+@planets_bp.route("", methods=["POST","GET"], strict_slashes=False)
 def create_planet():
-    request_body = request.get_json()
-    new_planet = Planet(name=request_body['name'], description=request_body['description'], biggest_moon=request_body['biggest_moon'])
-    db.session.add(new_planet)
-    db.session.commit()
-    return make_response(f'{new_planet.name} succesfully created', 201)
+    if request.method == "POST":
+        request_body = request.get_json()
+        new_planet = Planet(name=request_body['name'], description=request_body['description'], biggest_moon=request_body['biggest_moon'])
+        db.session.add(new_planet)
+        db.session.commit()
+        return make_response(f'{new_planet.name} succesfully created', 201)
+    elif request.method == "GET":
+        planets = Planet.query.all()
+        response = []
+        for planet in planets:
+            response.append(planet.to_dict())
+        return jsonify(response), 200
 
 # class Planet():
     # def __init__(self, id, name, description, major_moons=None):
