@@ -38,7 +38,7 @@ def handle_planets():
             )
         return jsonify(planets_response)
         
-@planets_bp.route("/<planet_id>", methods=["GET", "PUT"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
     
@@ -46,7 +46,7 @@ def handle_planet(planet_id):
         return make_response(
             f"Planet {planet_id} not found", 404
         )
-    if request.method== "GET":
+    if request.method == "GET":
 
         return {
             "id": planet.id,
@@ -54,6 +54,7 @@ def handle_planet(planet_id):
             "description": planet.description,
             "color": planet.color
         }, 200
+
     elif request.method == "PUT":
         request_body=request.get_json()
         if "name" not in request_body or "description" not in request_body or "color" not in request_body:
@@ -66,3 +67,8 @@ def handle_planet(planet_id):
 
         db.session.commit()
         return make_response(f"Planet '{planet.name}' successfully updated")
+
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet {planet.id} successfully deleted")
