@@ -5,3 +5,11 @@ class Planet(db.Model):
     name = db.Column(db.String)
     description = db.Column(db.String)
     size_rank = db.Column(db.Integer)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "size_rank": self.size_rank
+        }

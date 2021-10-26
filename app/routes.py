@@ -22,14 +22,7 @@ def handle_planets():
         planet_objects = Planet.query.all() # returning list of objects
         response_list = []
         for planet in planet_objects:
-            response_list.append(
-                {
-                    "id": planet.id,
-                    "name": planet.name,
-                    "description": planet.description,
-                    "size_rank": planet.size_rank
-                }
-            )
+            response_list.append(planet.to_dict())
         return make_response(jsonify(response_list), 200)
 
 
@@ -43,12 +36,7 @@ def handle_single_planet(planet_id):
     selected_planet = Planet.query.get_or_404(planet_id)
     
     if request.method == "GET":
-        return make_response({
-            "id": selected_planet.id,
-            "name": selected_planet.name,
-            "description": selected_planet.description,
-            "size_rank": selected_planet.size_rank
-        }, 200)
+        return selected_planet.to_dict()
 
     elif request.method == "PATCH":
         request_body = request.get_json()
