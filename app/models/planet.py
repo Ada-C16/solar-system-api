@@ -7,7 +7,9 @@ class Planet(db.Model):
     matter = db.Column(db.String)
     
     def make_dict(self):
-        return {"id": self.id,
-        "name": self.name,
-        "description": self.description,
-        "matter": self.matter}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "matter": self.matter
+        }
