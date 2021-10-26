@@ -6,8 +6,14 @@ planets_bp = Blueprint("planet", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["POST", "GET"])
 def handle_planets():
+    """dfssdfsdd """
     if request.method == "POST":
         request_body = request.get_json()
+
+        if "name" not in request_body or "description" not in request_body \
+            or "moons" not in request_body: 
+            return jsonify({"message": "Missing data"}), 400
+
         new_planet = Planet(name=request_body["name"],
                         description=request_body["description"],
                         moons=request_body["moons"])
