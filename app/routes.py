@@ -20,7 +20,7 @@ def handle_planets():
 
     elif request.method == 'GET':
         planets = Planet.query.all()
-        planets_response = list()
+        planets_response = []
 
         for planet in planets:
             planets_response.append(planet.to_dict())
@@ -31,4 +31,6 @@ def handle_planets():
 def handle_single_planet(id):
     if request.method == 'GET':
         planet = Planet.query.get(id)
-        return make_response(jsonify(planet.to_dict()), 200)
+        response_body = planet.to_dict()
+        return make_response(jsonify(response_body), 200)
+
