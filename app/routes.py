@@ -54,5 +54,10 @@ def handle_single_planet(planet_id):
             selected_planet.size_rank = request_body["size_rank"]
         db.session.commit()
         return make_response(f"{selected_planet.name} updated", 200)
+
+    elif request.method == "DELETE":
+        db.session.delete(selected_planet)
+        db.session.commit()
+        return make_response(f"{selected_planet.name} deleted", 200)
         
 
