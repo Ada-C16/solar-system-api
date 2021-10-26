@@ -62,6 +62,20 @@ def handle_planet(planet_id):
         db.session.commit()
         return jsonify(planet.to_dict()),200
 
-    
+@planets_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    print(planet_id)
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"Error": "Planet ID needs to be a number"}, 400
+    planet = Planet.query.get(planet_id)
+
+    if planet:
+        db.session.delete(planet)
+        db.session.commit()
+        return {"Success": f"Deleted planet {planet_id}"}, 200
+    else:
+        return {"Error": "No planet with ID matching {planet_id}"}, 404
 
 
