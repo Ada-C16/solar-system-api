@@ -25,9 +25,23 @@ def handle_planets():
 
         return make_response(f"Planet {new_planet.name} successfully created", 201)
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH"])
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
 
-    return planet.to_json()
+    if not planet:
+        return make_response(f"Planet ID {planet_id} not valid", 404)
 
+    if request.method == "GET":
+        return planet.to_json()
+    elif request.method == "PATCH":
+        request_body = request.get_json()
+
+        if "name" in request_body:
+            planet.name = request_body["name"]
+        if "description" in request_body:
+            planet.description = request_body["description"]
+
+        db.session.commit()
+
+        return make_response(f"Planet {planet.name} updated successfully", 200)
