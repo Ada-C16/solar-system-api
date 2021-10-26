@@ -26,7 +26,7 @@ def read_planets():
         planets_response = []
         for planet in planets:
             planets_response.append(
-                planet.to_dict()
+                planet.to_json()
             )
         return jsonify(planets_response)
 
@@ -38,7 +38,7 @@ def read_planet(planet_id):
         return {"error": "planet_id must be an int"}, 400
 
     planet = Planet.query.get(planet_id)
-    return planet.to_dict()
+    return planet.to_json()
 
     # planet_response = []
     # for planet in planets:
