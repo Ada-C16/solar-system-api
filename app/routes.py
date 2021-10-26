@@ -39,11 +39,11 @@ def handle_planet(id):
     elif request.method == "PATCH":
         request_body = request.get_json()
         if "name" in request_body:
-            planet.name == request_body["name"]   
+            planet.name = request_body["name"]   
         if "description" in request_body:
-            planet.description == request_body["description"]     
+            planet.description = request_body["description"]     
         if "moons" in request_body:
-            planet.moons == request_body["moons"]
+            planet.moons = request_body["moons"]
         db.session.commit()
         return jsonify([planet.to_dict(), "Update Successful"])
 
