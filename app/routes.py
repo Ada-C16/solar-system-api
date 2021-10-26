@@ -1,7 +1,8 @@
 #define our class and make bluprints
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from app.models.planets import Planet
 from app import db
+
 
 #class are capitalized
 # class Planet: 
@@ -48,3 +49,13 @@ def get_planet(planet_id):
             }, 200
     
     return f'Planet {planet_id} not found', 404
+
+@planets_bp.route("", methods=["POST"])
+def create_new_planet():
+    request_body = request.get_json()
+    new_planet = Planet(name = request_body["name"], description = request_body["description"], num_moons = request_body["num_moons"])
+
+    db.session.add(new_planet)
+    db.session.commit()
+
+    return f"{new_planet.name} Successfully Created", 201

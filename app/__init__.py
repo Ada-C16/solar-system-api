@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
-DATABASE_CONNECTION_STRING = 'postgresql+psycopg2://postgres:postgres@localhost5432/solar_system_development'
+DATABASE_CONNECTION_STRING = 'postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_development'
 
 
 def create_app(test_config=None):
