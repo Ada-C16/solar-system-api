@@ -25,7 +25,7 @@ def handle_planets():
 
         return make_response(f"Planet {new_planet.name} successfully created", 201)
 
-@planets_bp.route("/<planet_id>", methods=["GET", "PATCH"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "DELETE"])
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
 
@@ -45,3 +45,8 @@ def handle_planet(planet_id):
         db.session.commit()
 
         return make_response(f"Planet {planet.name} updated successfully", 200)
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+
+        return make_response(f"{planet.name} successfully deleted", 200)
