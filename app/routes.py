@@ -27,7 +27,7 @@ def handle_planets():
         return jsonify(planets_response)
 
 
-@planets_bp.route("<id>", methods=["GET", "PATCH"])
+@planets_bp.route("<id>", methods=["GET", "PATCH", "DELETE"])
 def handle_planet(id):
     try:
         planet = Planet.query.get(id)
@@ -46,4 +46,8 @@ def handle_planet(id):
             planet.moons = request_body["moons"]
         db.session.commit()
         return jsonify([planet.to_dict(), "Update Successful"])
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response("Delete successful", 200)
 
