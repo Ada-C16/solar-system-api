@@ -47,9 +47,9 @@ def handle_planet(planet_id):
         return jsonify(planet.create_planet_dictionary())
 
     elif request.method == "DELETE":
-        Planet.query.delete(planet)
+        db.session.delete(planet)
         db.session.commit()
-        return jsonify({"Message": f"Success! Planet with {planet_id} was destroyed!"})
+        return jsonify({"Message": f"Success! Planet with id {planet_id} was destroyed!"})
 
     elif request.method == "PUT":
         input_data = request.get_json()
