@@ -45,10 +45,23 @@ def handle_planets():
         planets_response.append(planet.to_dict())
     return jsonify(planets_response), 200
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT"])
 def handle_planet(planet_id):
     planet_id = int(planet_id)
     planet = Planet.query.get(planet_id)
     if not planet:
         return { "Error": f"Planet {planet_id} was not found"}, 404
-    return jsonify(planet.to_dict()), 200
+    if request.method=="GET":
+        return jsonify(planet.to_dict()), 200
+    elif request.method== "PUT":
+        request_data=request.get_json()
+        planet.name=request_data["name"]
+        planet.description=request_data["description"]
+        planet.moons=request_data["moons"]
+
+        db.session.commit()
+        return jsonify(planet.to_dict()),200
+
+    
+
+
