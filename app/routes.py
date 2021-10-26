@@ -39,11 +39,10 @@ def handle_planet(planet_id):
 
     planet = Planet.query.get(planet_id)
 
+    if planet is None:
+        return make_response(f"Not Found", 404)
+
     if request.method == "GET":
-
-        if planet is None:
-            return make_response(f"Planet {planet_id} Not Found", 404)
-
         return {
             "id": planet.id,
             "name": planet.name,
@@ -53,9 +52,6 @@ def handle_planet(planet_id):
     elif request.method == "PUT":
         form_data = request.get_json()
 
-        if planet is None:
-            return make_response(f"Planet {planet_id} Not Found", 404)
-
         planet.name = form_data["name"]
         planet.description = form_data["description"]
 
@@ -64,9 +60,6 @@ def handle_planet(planet_id):
         return jsonify(f"Planet #{planet.id} sucessfully updated", 200)
 
     elif request.method == "DELETE":
-        if planet is None:
-            return make_response(f"Planet {planet_id} Not Found", 404)
-
         db.session.delete(planet)
         db.session.commit()
         return jsonify(f"Planet #{planet.id} sucessfully deleted", 200)
