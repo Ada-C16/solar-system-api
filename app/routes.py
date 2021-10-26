@@ -24,6 +24,7 @@ def handle_planets():
         for planet in planet_objects:
             response_list.append(
                 {
+                    "id": planet.id,
                     "name": planet.name,
                     "description": planet.description,
                     "size_rank": planet.size_rank
@@ -32,13 +33,26 @@ def handle_planets():
         return make_response(jsonify(response_list), 200)
 
 
-@planets_bp.route("/<planet_id>", methods=["GET"],)
-def get_one_planet_by_id(planet_id):
-    # requested_planet = Planet.query.filter_by(id=planet_id).first()
-    requested_planet = Planet.query.get(planet_id)
-    return make_response({
-        "name": requested_planet.name,
-        "description": requested_planet.description,
-        "size_rank": requested_planet.size_rank
-    }, 200)
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "DELETE"],)
+def handle_single_planet(planet_id):
+    selected_planet = Planet.query.get_or_404(planet_id)
+    if request.method == "GET":
+        return make_response({
+            "id": selected_planet.id,
+            "name": selected_planet.name,
+            "description": selected_planet.description,
+            "size_rank": selected_planet.size_rank
+        }, 200)
+
+    elif request.method == "PATCH":
+        request_body = request.get_json()
+        if "name" in request_body:
+            selected_planet.name = request_body["name"]
+        if "description" in request_body:
+            selected_planet.description = request_body["description"]
+        if "size_rank" in request_body:
+            selected_planet.size_rank = request_body["size_rank"]
+        db.session.commit()
+        return make_response(f"{selected_planet.name} updated", 200)
+        
 
