@@ -19,10 +19,22 @@ def create_planet():
             response.append(planet.to_dict())
         return jsonify(response), 200
 
-@planets_bp.route("/<id>", methods=["GET"], strict_slashes=False)
+@planets_bp.route("/<id>", methods=["GET", "PUT"], strict_slashes=False)
 def get_planet(id):
     id = int(id)
-    planets = Planet.query.all()
-    for planet in planets:
-        if planet.id == id:
-            return planet.to_dict(), 200
+    if request.method == "GET":
+        planets = Planet.query.all()
+        for planet in planets:
+            if planet.id == id:
+                return planet.to_dict(), 200
+    elif request.method == "PUT":
+        request_body = request.get_json()
+        planet = Planet.query.get(id)
+        planet.name = request_body["name"]
+        planet.description = request_body["description"]
+        planet.biggest_moon = request_body["biggest_moon"]
+        db.session.commit()
+        return make_response(f'planet {id} succesfully updated')
+        
+
+
