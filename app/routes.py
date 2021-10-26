@@ -44,27 +44,29 @@ def handle_planets():
                 "color": planet.color,
             })
         return jsonify(planets_response)
+        
     elif request.method == "POST":
         request_body = request.get_json()
         new_planet = Planet(name=request_body["name"],
                         description=request_body["description"],
                         color=request_body["color"])
 
-    db.session.add(new_planet)
-    db.session.commit()
+        db.session.add(new_planet)
+        db.session.commit()
 
-    return make_response(f"Planet {new_planet.name} successfully created", 201)
+        return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 
 @solar_systems_bp.route("/<planet_id>", methods=["GET"])
 def handle_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        return {"error": "dog_id must be an integer"},400
+        
     planet = Planet.query.get(planet_id)
 
-    return {
-        "id":planet.id,
-        "name": planet.name,
-        "description": planet.description
-    }
+    return planet.to_dict()
 # @solar_systems_bp.route("", methods=["GET", "POST"])
 # def get_planet_json():
 #     planet_response = []
