@@ -58,3 +58,19 @@ def get_planet(planet_id):
 
         return jsonify(planet.to_dict()), 200
 
+
+
+@solarsystem_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"Error": "Id must be numeric"}, 400
+    planet = Planet.query.get(planet_id)
+    if planet:
+        db.session.delete(planet)
+        db.session.commit()
+        return {"Message": f"Planet with id number {planet_id} deleted."}, 200
+
+    else:
+        return {"Message": f"Planet with id number {planet_id} not found"}, 404
