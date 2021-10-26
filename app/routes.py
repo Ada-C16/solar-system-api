@@ -37,14 +37,29 @@ def read_planet(planet_id):
 
     return planet.make_dict()
 
-# @planets_bp.route("/<planet_id>", methods=["GET"])
-# def get_one_planet(planet_id):
-#     try:
-#         planet_id=int(planet_id)
-#     except:
-#         return("Not a number!")
-#     planet_id = int(planet_id)
-#     for planet in planets:
-#         if planet.id == planet_id:
-#             return jsonify(planet.make_dict())
-#     return ("Not Found!")
+
+@planets_bp.route("/<planet_id>", methods=["PUT"])
+def update_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+    form_data = request.get_json()
+
+    planet.name = form_data["name"]
+    planet.description = form_data["description"]
+    planet.matter = form_data["matter"]
+
+    db.session.commit()
+
+    return make_response(f"Planet {planet.name} successfully updated!", 200)
+
+
+@planets_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return make_response(f"Planet {planet.name} successfully deleted!", 200)
+
+
+
