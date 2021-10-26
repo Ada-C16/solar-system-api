@@ -27,10 +27,23 @@ def handle_planets():
         return jsonify(planets_response)
 
 
-@planets_bp.route("<id>", methods=["GET"])
+@planets_bp.route("<id>", methods=["GET", "PATCH"])
 def handle_planet(id):
     try:
         planet = Planet.query.get(id)
     except:
         return make_response("Invalid ID", 400)
-    return planet.to_dict()
+    if request.method == "GET":
+        return planet.to_dict()
+    
+    elif request.method == "PATCH":
+        request_body = request.get_json()
+        if "name" in request_body:
+            planet.name == request_body["name"]   
+        if "description" in request_body:
+            planet.description == request_body["description"]     
+        if "moons" in request_body:
+            planet.moons == request_body["moons"]
+        db.session.commit()
+        return jsonify([planet.to_dict(), "Update Successful"])
+
