@@ -20,18 +20,55 @@ def handle_planets():
             "picture": planet.picture})
     return jsonify(planets_response), 200
     
-@planets_bp.route("/<planet_id>", methods=["GET"])
-def handle_dog(planet_id):
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "PUT"])
+def handle_planet(planet_id):
     planet_id = int(planet_id)
     planet = Planet.query.get(planet_id)
+    if request.method == "GET":
+        if planet:
+            return {"id": planet.id, 
+                "name": planet.name,
+                "diameter": planet.diameter,
+                "moons": planet.moons,
+                "picture": planet.picture},200
+        return { "Error": f"Planet {planet_id} was not found"}, 404
+    elif request.method == "PATCH":
+        try:
+            form_data = request.get_json()
+        except KeyError:
+            pass
+        try:
+            planet.name = form_data["name"]
+        except KeyError:
+            pass
+        try:
+            planet.diameter = form_data["diameter"]
+        except KeyError:
+            pass
+        try:
+            planet.moons = form_data["moons"]
+        except KeyError:
+            pass
+        try:
+            planet.picture = form_data["picture"]
+        except KeyError:
+            pass
+        db.session.commit()
 
-    if planet:
-        return {"id": planet.id, 
-            "name": planet.name,
-            "diameter": planet.diameter,
-            "moons": planet.moons,
-            "picture": planet.picture},200
-    return { "Error": f"Planet {planet_id} was not found"}, 404
+        return make_response(f"Planet #{planet.id} successfully updated")
+    elif request.method == "PUT":
+        form_data = request.get_json()
+        planet.name = form_data["name"]
+        planet.diameter = form_data["diameter"]
+        planet.moons = form_data["moons"]
+        planet.picture = form_data["picture"]
+
+        db.session.commit()
+
+        return make_response(f"Planet #{planet.id} successfully updated")
+    
+
+
     
 @planets_bp.route("", methods=["POST"])
 def create_planet():
