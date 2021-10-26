@@ -13,8 +13,8 @@ def read_planets():
 
         new_planet = Planet(
             name=request_body["name"],
-            description=request_body["description"]
-            # moon=request_body["moon"]
+            description=request_body["description"],
+            moon=request_body["moon"]
         )
         db.session.add(new_planet)
         db.session.commit()
