@@ -31,14 +31,14 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(f"Planet {new_planet.name} successfully created", 201)
+        return jsonify(f"Planet {new_planet.name} successfully created"), 201
 
 
 @planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
 def planet(planet_id):
     planet = Planet.query.get(planet_id)
-    if planet is None:
-        return jsonify(f"Error: Planet {planet.id} not found", 404)
+    if not planet:
+        return jsonify(f"Error: Planet {planet_id} not found"), 404
     
     if request.method == "GET":
         return {
