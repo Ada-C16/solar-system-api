@@ -6,7 +6,10 @@ planets_bp = Blueprint("planet", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["POST", "GET"])
 def handle_planets():
-    """dfssdfsdd """
+    """Handles POST and GET requests for /planets. 
+        Returns success message if planet successfully created with POST request.
+        Returns data on all planets in JSON with GET request."""
+    
     if request.method == "POST":
         request_body = request.get_json()
 
@@ -28,10 +31,15 @@ def handle_planets():
         planets_response = []
         for planet in planets: 
             planets_response.append(planet.to_dict())
-        return jsonify(planets_response)
+        return jsonify(planets_response), 200
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_one_planet(planet_id):
+    """Handles GET, PUT, and DELETE requests for one planet entry. 
+        Reads and returns planet info for GET request with valid ID input or 404 for invalid ID input.
+        Updates planet entry and returns success message for PUT request.
+        Deletes specified planet entry and return success message for DELETE request."""
+    
     planet_id = int(planet_id)
     planet = Planet.query.get_or_404(planet_id)
 
@@ -52,4 +60,5 @@ def handle_one_planet(planet_id):
     elif request.method == "DELETE": 
         db.session.delete(planet)
         db.session.commit()
+
         return make_response(f"Planet {planet.name} successfully deleted")
