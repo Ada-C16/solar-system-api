@@ -1,8 +1,6 @@
 from flask import Blueprint, jsonify, render_template, make_response, request
 from app import db
 from app.models.planet import Planet
-from jsonschema import validate
-import jsonschema
 
 
 planets_bp = Blueprint("planets_bp", __name__,url_prefix="/planets")
@@ -12,31 +10,19 @@ def handle_planets():
     planets_response = []
     planets = Planet.query.all()
     for planet in planets:
-        planets_response.append(
-            {"id": planet.id, 
-            "name": planet.name,
-            "diameter": planet.diameter,
-            "moons": planet.moons,
-            "picture": planet.picture})
+        planets_response.append(planet.to_dict())
     return jsonify(planets_response), 200
     
-@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "PUT"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "PUT", "DELETE"])
 def handle_planet(planet_id):
     planet_id = int(planet_id)
     planet = Planet.query.get(planet_id)
     if request.method == "GET":
         if planet:
-            return {"id": planet.id, 
-                "name": planet.name,
-                "diameter": planet.diameter,
-                "moons": planet.moons,
-                "picture": planet.picture},200
+            return (planet.to_dict()),200
         return { "Error": f"Planet {planet_id} was not found"}, 404
     elif request.method == "PATCH":
-        try:
-            form_data = request.get_json()
-        except KeyError:
-            pass
+        form_data = request.get_json()
         try:
             planet.name = form_data["name"]
         except KeyError:
@@ -66,6 +52,12 @@ def handle_planet(planet_id):
         db.session.commit()
 
         return make_response(f"Planet #{planet.id} successfully updated")
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return {
+            "message": f"Book with title {planet.name} has been deleted"
+        }, 200
     
 
 

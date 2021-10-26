@@ -7,3 +7,10 @@ class Planet(db.Model):
     diameter = db.Column(db.String)
     moons = db.Column(db.Boolean)
     picture = db.Column(db.String)
+
+    def to_dict(self):
+        return ({"id": self.id, 
+                "name": self.name,
+                "diameter": self.diameter,
+                "moons": self.moons,
+                "picture": self.picture})
