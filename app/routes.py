@@ -29,12 +29,26 @@ def handle_planets():
         return make_response(f"New Planet {new_planet.name} created", 201)
 
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "DELETE"])
 def get_planet(planet_id):
     planet = Planet.query.get(planet_id) 
     if planet == None:
         return "Not found", 404
-    return planet.to_dict(), 200 
+    if request.method == "GET":
+
+        return planet.to_dict(), 200 
+    elif request.method == "PATCH":
+         request_body = request.get_json()
+         if "name" in request_body:
+             planet.name = request_body["name"]
+         if "description" in request_body:
+             planet.description = request_body["description"]
+         if "distance_from_sun" in request_body:
+             planet.distance_from_sun = request_body["distance_from_sun"]
+         db.session.commit()
+         return jsonify(planet.to_dict())
+    
+   
     
     
     
