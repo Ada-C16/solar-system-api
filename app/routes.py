@@ -37,30 +37,18 @@ def create_planet():
     return f"Planet {new_planet.name} created", 201
 
 
+@planets_bp.route("", methods=["GET"])
+def handle_planets():
+    planets_response = []
+    planets = Planet.query.all()
+    for planet in planets:
+        planets_response.append(planet.to_dict())
+    return jsonify(planets_response), 200
 
-
-
-
-# @planets_bp.route("", methods=["GET"])
-# def handle_planets():
-#     planets_response = []
-#     for planet in list_of_planets:
-#         planets_response.append({
-#             "id": planet.id,
-#             "name": planet.name,
-#             "description": planet.description,
-#             "moons": planet.moons
-#         })
-#     return jsonify(planets_response)
-
-# @planets_bp.route("/<planet_id>", methods=["GET"])
-# def handle_planet(planet_id):
-#     planet_id = int(planet_id)
-#     for planet in list_of_planets:
-#         if planet.id == planet_id:
-#             return {
-#                 "id": planet.id,
-#                 "name": planet.name,
-#                 "description": planet.description,
-#                 "moons": planet.moons
-#             }
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def handle_planet(planet_id):
+    planet_id = int(planet_id)
+    planet = Planet.query.get(planet_id)
+    if not planet:
+        return { "Error": f"Planet {planet_id} was not found"}, 404
+    return jsonify(planet.to_dict()), 200
