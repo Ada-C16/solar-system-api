@@ -47,6 +47,10 @@ def get_planet(planet_id):
              planet.distance_from_sun = request_body["distance_from_sun"]
          db.session.commit()
          return jsonify(planet.to_dict())
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet #{planet_id} is successfully deleted")
     
    
     
