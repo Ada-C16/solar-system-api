@@ -6,7 +6,6 @@ class Planet(db.Model):
     description = db.Column(db.String)
     biggest_moon = db.Column(db.String)
 
-    # Not sure if this will work
     def to_dict(self):
         return {
             "name": self.name,
