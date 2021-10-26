@@ -12,6 +12,7 @@ def handle_planets():
     planets = Planet.query.all()
     for planet in planets:
         planets_response.append(planet.to_dict())
+    
     return jsonify(planets_response), 200
     
 
@@ -28,22 +29,15 @@ def handle_planet(planet_id):
     
     elif request.method == "PATCH":
         form_data = request.get_json()
-        try:
-            planet.name = form_data["name"]
-        except KeyError:
-            pass
-        try:
-            planet.diameter = form_data["diameter"]
-        except KeyError:
-            pass
-        try:
-            planet.moons = form_data["moons"]
-        except KeyError:
-            pass
-        try:
-            planet.picture = form_data["picture"]
-        except KeyError:
-            pass
+        if 'name' in form_data:
+            planet.name = request.json['name']
+        if 'diameter' in form_data:
+            planet.diameter = request.json['diameter']
+        if 'moons' in form_data:
+            planet.moons = request.json['moons']
+        if 'picture' in form_data:
+            planet.picture = request.json['picture']
+    
         db.session.commit()
 
         return make_response(f"Planet #{planet.id} successfully updated")
