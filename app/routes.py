@@ -11,7 +11,11 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 @planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     if request.method == "GET":
-        planets = Planet.query.all()
+        name = request.args.get("name")
+        if name:
+            planets = Planet.query.filter_by(name=name) 
+        else:
+            planets = Planet.query.all()
         planets_response = []
         for planet in planets:
             planets_response.append(
