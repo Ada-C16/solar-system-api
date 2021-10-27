@@ -14,20 +14,19 @@ def handle_planets():
             planets = Planet.query.filter_by(name=name_from_url).all()
             if not planets:
                 planets = Planet.query.filter(Planet.name.contains(name_from_url))
-
+                
         else:
             planets = Planet.query.all()
             
         planets_response = []
         for planet in planets:
-            planets_response.append(
-                {
-                    "id": planet.id,
-                    "name": planet.name,
-                    "description": planet.description,
-                    "type": planet.type,
-                }
-            )
+            planets_response.append(planet.create_dict())
+        
+        if not planets_response:
+            planets = Planet.query.all()
+            for planet in planets:
+                planets_response.append(planet.create_dict())
+        
         return jsonify(planets_response)
 
     elif request.method == "POST":
@@ -39,8 +38,8 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
+        # return make_response(new_planet.create_dict(), 201)
         return jsonify(f"Planet with id:{new_planet.id} successfully created"), 201
-
 
 @planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
 def planet(planet_id):
@@ -49,12 +48,8 @@ def planet(planet_id):
         return jsonify(f"Error: Planet {planet_id} not found"), 404
     
     if request.method == "GET":
-        return {
-            "id": planet.id,
-            "name": planet.name,
-            "description": planet.description,
-            "type": planet.type,
-            }
+        return (planet.create_dict())
+            
     
     elif request.method == "PUT":
         form_data = request.get_json()

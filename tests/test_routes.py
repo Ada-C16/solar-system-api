@@ -30,6 +30,15 @@ def test_get_all_planets_when_some_exist(client, two_saved_planets):
     assert planet2 in response_body
 
 def test_create_a_planet_when_none_exist(client):
+    # tried to use the self.create_dict method to return a full dictionary
+    # but could not get the tests to work
+    # data = {"name":"Planet 1", "description":"I'm planet 1", "type":"gas giant"}
+    # response = client.post("/planets", json=(data))
+    # response_body = response.get_json()
+
+    # assert response.status_code == 201
+    # assert "Planet 1" in response_body
+    
     response = client.post("/planets", json=({"name":"Planet 1", "description":"I'm planet 1", "type":"gas giant"}))
     response_body = response.get_json()
 

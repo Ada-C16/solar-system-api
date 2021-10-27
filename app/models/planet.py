@@ -5,3 +5,11 @@ class Planet(db.Model):
     name = db.Column(db.String)
     description = db.Column(db.String)
     type = db.Column(db.String)
+
+    def create_dict(self):
+        return {
+                        "id": self.id,
+                        "name": self.name,
+                        "description": self.description,
+                        "type": self.type,
+                    }
