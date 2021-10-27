@@ -76,6 +76,6 @@ def delete_planet(planet_id):
         db.session.commit()
         return {"Success": f"Deleted planet {planet_id}"}, 200
     else:
-        return {"Error": "No planet with ID matching {planet_id}"}, 404
+        return {"Error": f"No planet with ID matching {planet_id}"}, 404
 
 
