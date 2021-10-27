@@ -9,10 +9,15 @@ planets_bp = Blueprint("planets_bp", __name__,url_prefix="/planets")
 @planets_bp.route("", methods = ["GET"])
 def handle_planets():
     planets_response = []
-    planets = Planet.query.all()
-    for planet in planets:
-        planets_response.append(planet.to_dict())
-    
+    if request.args.get("name"):
+        planets = Planet.query.filter_by(name=request.args.get("name"))
+        for planet in planets:
+            planets_response.append(planet.to_dict())
+    else:
+        planets = Planet.query.all()
+        for planet in planets:
+            planets_response.append(planet.to_dict())
+        
     return jsonify(planets_response), 200
     
 
@@ -83,16 +88,20 @@ def create_planet():
 
     return f"Planet {new_planet.name} created", 201
 
-
-@planets_bp.route("/picture/<planet_id>", methods=["GET"])
-def handle_planet_picture(planet_id):
-    planet = Planet.query.get(planet_id)
-    if planet:
-        
-        return render_template('planet_picture.html', url=planet.picture)
-    
-    return jsonify({"message": "Planet does not exist"}), 400
-
+@planets_bp.route("/picturesummary", methods=["GET"])
+def handle_planet_summary_params():
+    if request.args.get("name"):
+        planets = Planet.query.filter_by(name=request.args.get("name"))
+        for planet in planets:
+            if planet.moons == True:
+                moon = "Yes"
+            else:
+                moon = "No"
+            return render_template('planet_summary.html', 
+                            url=planet.picture, 
+                            title=planet.name,
+                            diameter=planet.diameter,
+                            moon=moon)
 
 @planets_bp.route("/picturesummary/<planet_id>", methods=["GET"])
 def handle_planet_summary(planet_id):
