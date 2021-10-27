@@ -30,7 +30,7 @@ def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
 
     if not planet:
-        return make_response(f"Planet ID {planet_id} not valid", 404)
+        return make_response(f"Planet ID {planet_id} doesn't exist", 404)
 
     if request.method == "GET":
         return planet.to_json()
