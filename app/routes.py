@@ -23,6 +23,8 @@ def create_planet():
 def get_planet(id):
     id = int(id)
     planet = Planet.query.get(id)
+    if planet is None:
+        return "", 404
     if request.method == "GET":
         planets = Planet.query.all()
         for planet in planets:
