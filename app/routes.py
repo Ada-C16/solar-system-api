@@ -22,7 +22,12 @@ def handle_planets():
         return jsonify(f"Planet {new_planet.name} created successfully"), 201
 
     elif request.method == "GET":
-        planets = Planet.query.all()
+        name_query = request.args.get("name")
+        if name_query:
+            planets = Planet.query.filter_by(name=name_query)
+        else:
+            planets = Planet.query.all()
+
         planets_response = []
         for planet in planets:
             planets_response.append({
