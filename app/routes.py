@@ -22,7 +22,7 @@ def handle_planets():
 
     if request.method == "POST":
         if "name" not in request_body:
-            return make_response("Invalid Request", 400)
+            return make_response("Invalid Request", 404)
 
         new_planet = Planet(
             name=request_body['name'],
