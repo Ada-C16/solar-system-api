@@ -11,9 +11,9 @@ def handle_planets():
     if request.method == "GET":
         name_from_url = request.args.get("name")
         if name_from_url:
-            planets = Planet.query.filter_by(name=name_from_url)
-            # if planets is False:
-            #     planets = Planet.query.filter(Planet.name.contains(name_from_url))
+            planets = Planet.query.filter_by(name=name_from_url).all()
+            if not planets:
+                planets = Planet.query.filter(Planet.name.contains(name_from_url))
 
         else:
             planets = Planet.query.all()
@@ -39,7 +39,7 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
-        return jsonify(f"Planet {new_planet.name} successfully created"), 201
+        return jsonify(f"Planet with id:{new_planet.id} successfully created"), 201
 
 
 @planet_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
