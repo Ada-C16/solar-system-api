@@ -51,7 +51,8 @@ def handle_one_planet(planet_name):
     return {
             "id": planet.id,
             "name": planet.name,
-            "description": planet.description
+            "description": planet.description,
+            "circum": planet.circum
             
             }, 200
   
