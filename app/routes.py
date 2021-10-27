@@ -9,14 +9,20 @@ planets_bp = Blueprint("planets_bp", __name__,url_prefix="/planets")
 @planets_bp.route("", methods = ["GET"])
 def handle_planets():
     planets_response = []
+    
     if request.args.get("name"):
         planets = Planet.query.filter_by(name=request.args.get("name"))
-        for planet in planets:
-            planets_response.append(planet.to_dict())
+    
+    elif request.args.get("has_moons"):
+        planets = Planet.query.filter(Planet.moons == request.args.get("has_moons"))
+    
+    elif request.args.get("order_by") == "name":
+        planets = Planet.query.order_by(Planet.name)
+    
     else:
         planets = Planet.query.all()
-        for planet in planets:
-            planets_response.append(planet.to_dict())
+    for planet in planets:
+        planets_response.append(planet.to_dict())
         
     return jsonify(planets_response), 200
     
