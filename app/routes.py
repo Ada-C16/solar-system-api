@@ -1,6 +1,6 @@
 from app import db
 from app.models.planet import Planet
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, abort
 
 
 
@@ -47,7 +47,7 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT"])
 def handle_planet(planet_id):
-    planet_id = int(planet_id)
+    planet_id=validate_id_int(planet_id)
     planet = Planet.query.get(planet_id)
     if not planet:
         return { "Error": f"Planet {planet_id} was not found"}, 404
@@ -65,10 +65,8 @@ def handle_planet(planet_id):
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
 def delete_planet(planet_id):
     print(planet_id)
-    try:
-        planet_id = int(planet_id)
-    except ValueError:
-        return {"Error": "Planet ID needs to be a number"}, 400
+    planet_id=validate_id_int(planet_id)
+    
     planet = Planet.query.get(planet_id)
 
     if planet:
@@ -78,4 +76,23 @@ def delete_planet(planet_id):
     else:
         return {"Error": f"No planet with ID matching {planet_id}"}, 404
 
+def validate_id_int(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        abort(400, "Error: Planet ID needs to be a number")
+
+
+        
+# def validating_input(request_data):
+#     data_types={"name":str, "description": str, "moons":int}
+#     for name, val_type in data_types.items():
+#         try:
+#             val=request_data[name]
+#             val_type(val)
+
+#         except Exception as e:
+#             print (e)
+#             abort(400, "Bad Data")
+#     return request_data
 
