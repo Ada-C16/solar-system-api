@@ -40,7 +40,7 @@ def create_planets():
     return make_response(f"Your planet, {new_planet.name}, has been created.", 201)
 
 @planets_bp.route("", methods=["GET"])
-def handle_planets():
+def read_all_planets():
     planets = Planet.query.all()
     planets_response = []
 
@@ -51,12 +51,12 @@ def handle_planets():
 
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
-def get_planet(planet_id):
+def read_a_planet(planet_id):
     planet = get_planet(planet_id)
     return jsonify(planet.to_json(), 200)
 
 @planets_bp.route("/<planet_id>", methods=["PATCH"])
-def get_planet(planet_id):
+def update_a_planet(planet_id):
     request_body = request.get_json()
     planet = get_planet(planet_id)
 
@@ -74,7 +74,7 @@ def get_planet(planet_id):
 
 
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
-def get_planet(planet_id):
+def delete_a_planet(planet_id):
     planet = get_planet(planet_id)      
 
     db.session.delete(planet)
