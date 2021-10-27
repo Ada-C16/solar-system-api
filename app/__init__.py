@@ -8,18 +8,21 @@ db = SQLAlchemy()
 migrate = Migrate()
 load_dotenv()
 
+
 def create_app(test_config=None):
     app = Flask(__name__)
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+
     if not test_config:
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI")
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+            "SQLALCHEMY_DATABASE_URI")
         app.config['SQLALCHEMY_ECHO'] = True
 
     else:
         app.config["TESTING"] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_TEST_DATABASE_URI")
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+            "SQLALCHEMY_TEST_DATABASE_URI")
         app.config['SQLALCHEMY_ECHO'] = True
 
     # import models here
@@ -28,7 +31,7 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # register blueprints here 
+    # register blueprints here
     from .routes import planets_bp
     app.register_blueprint(planets_bp)
 

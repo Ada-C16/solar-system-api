@@ -20,10 +20,11 @@ def app():
 def client(app):
     return app.test_client()
 
+
 @pytest.fixture
 def two_saved_planets(app):
-    planet1 = Planet(name= "Earth", description= "Blue green marble", distance= "Right here")
-    planet2 = Planet(name= "Mars", description= "red", distance= "next door")
+    planet1 = Planet(
+        name="Earth", description="Blue green marble", distance="Right here")
+    planet2 = Planet(name="Mars", description="red", distance="next door")
     db.session.add_all([planet1, planet2])
     db.session.commit()
-
