@@ -9,7 +9,15 @@ planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planets")
 @planet_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     if request.method == "GET":
-        planets = Planet.query.all()
+        name_from_url = request.args.get("name")
+        if name_from_url:
+            planets = Planet.query.filter_by(name=name_from_url)
+            # if planets is False:
+            #     planets = Planet.query.filter(Planet.name.contains(name_from_url))
+
+        else:
+            planets = Planet.query.all()
+            
         planets_response = []
         for planet in planets:
             planets_response.append(
@@ -71,6 +79,9 @@ def planet(planet_id):
             db.session.commit()
         if "description" in request_body:
             planet.description = request_body["description"]
+            db.session.commit()
+        if "type" in request_body:
+            planet.type = request_body["type"]
             db.session.commit()
 
         return jsonify(f"Planet # {planet.id} succesfully updated")
