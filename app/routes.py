@@ -41,9 +41,19 @@ def create_planets():
 
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
-    planets = Planet.query.all()
-    planets_response = []
+    
+    name_query = request.args.get("name")
+    xenomorphs_query = request.args.get("xenomorphs")
+    
+    if name_query:
+        planets = Planet.query.filter_by(name=name_query)
+    elif xenomorphs_query:
+        planets = Planet.query.filter_by(xenomorphs=xenomorphs_query)
+    else:
+        planets = Planet.query.all()
 
+
+    planets_response = []
     for planet in planets:
         planets_response.append(planet.to_json())
 
