@@ -11,17 +11,16 @@ def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
         if ("name" or "description" or "distance") not in request_body:
-            return jsonify("Invalid Request"), 400
+            return jsonify("Invalid Request"), 404
 
         new_planet = Planet(
-            id=request_body["id"],
             name=request_body["name"],
             description=request_body["description"],
             distance=request_body["distance"]
         )
         db.session.add(new_planet)
         db.session.commit()
-        return jsonify(new_planet), 201
+        return jsonify(new_planet.planet_dict()), 201
     elif request.method == "GET":
         planet_name_query = request.args.get("name")
         if planet_name_query:
@@ -30,8 +29,7 @@ def handle_planets():
             planets = Planet.query.all()
 
         planets_response = [
-            {"id": planet.id, "name": planet.name, "description": planet.description,
-            "distance": planet.distance} for planet in planets
+            planet.planet_dict() for planet in planets
         ]
         return jsonify(planets_response)
 
@@ -43,13 +41,7 @@ def get_one_planet(planet_id):
         return jsonify(f"Planet {planet_id} not found"), 404
 
     if request.method == "GET":
-        response_body = {
-            "id": planet.id,
-            "name": planet.name,
-            "description": planet.description,
-            "distance": planet.distance
-        }
-        return jsonify(response_body)
+        return jsonify(planet.planet_dict())
 
     elif request.method == "PUT":
         response_body = request.get_json()

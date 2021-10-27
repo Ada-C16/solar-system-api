@@ -1,3 +1,5 @@
+import json
+
 def test_get_all_planets_with_no_records(client):
     response = client.get("/planets")
     response_body = response.get_json()
@@ -32,12 +34,19 @@ def test_get_planet_returns_expected_planet(client, two_saved_planets):
 
 
 def test_returns_new_planet(client, two_saved_planets):
-    response = client.post("/planets")
-    response_body = {
+    data = {
         "name": "Earth",
         "description": "Blue green marble",
         "distance": "Right here"
     }
+    response = client.post("/planets", data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     assert response.status_code == 201
-    assert len(response_body) == 1
+
+
+def test_get_planet_returns_404(client):
+    response = client.get("/planets/1")
+
+    assert response.status_code == 404
+
+
