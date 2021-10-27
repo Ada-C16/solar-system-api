@@ -26,7 +26,7 @@ def handle_planets():
                     "color": planet.color
                 }
             )
-        return jsonify(planets_response)
+        return jsonify(planets_response), 200
 
     elif request.method == "POST":
         request_body = request.get_json()
