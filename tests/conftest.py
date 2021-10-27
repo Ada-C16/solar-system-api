@@ -26,3 +26,4 @@ def two_saved_planets(app):
     planet2 = Planet(name= "Mars", description= "red", distance= "next door")
     db.session.add_all([planet1, planet2])
     db.session.commit()
+
