@@ -47,7 +47,7 @@ def read_all_planets():
     for planet in planets:
         planets_response.append(planet.to_json())
 
-    return jsonify(planets_response)
+    return jsonify(planets_response, 200)
 
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
