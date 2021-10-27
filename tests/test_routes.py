@@ -20,5 +20,5 @@ def test_get_one_planet(client, two_saved_planets):
         "id": 1,
         "name": "Planet Nine",
         "description": "mysterious shadow planet",
-        "circum": 10000
+        "circumference": 10000
     }
