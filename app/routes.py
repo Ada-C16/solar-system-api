@@ -22,7 +22,6 @@ def handle_all_planets():
       planets_response.append({"id": planet.id, "name": planet.name, "description": planet.description, "circumference in mkm": planet.circum})
     return jsonify(planets_response)
 
-
 @planets_bp.route("/<planet_name>", methods=["GET", "PUT", "DELETE"])
 def handle_one_planet(planet_name):
   planet = Planet.query.get(planet_name)
@@ -53,10 +52,12 @@ def handle_one_planet(planet_name):
             "name": planet.name,
             "description": planet.description,
             "circum": planet.circum
-            
             }, 200
   
   elif request.method == "DELETE":
     db.session.delete(planet)
     db.session.commit()
     return f"{planet.name} was successfully deleted", 200
+
+
+
