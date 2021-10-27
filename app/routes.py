@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, make_response, request
+from flask import Blueprint, jsonify, render_template, make_response, request, abort
 from app import db
 from app.models.planet import Planet
 
@@ -18,17 +18,19 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "PUT", "DELETE"])
 def handle_planet(planet_id):
+    if not planet_id.isnumeric():
+        return { "Error": f"{planet_id} must be numeric."}, 404
     planet_id = int(planet_id)
     planet = Planet.query.get(planet_id)
-    if request.method == "GET":
-        if planet:
-            
-            return (planet.to_dict()),200
-        
+    if not planet:
         return { "Error": f"Planet {planet_id} was not found"}, 404
+    
+    elif request.method == "GET":
+        return (planet.to_dict()),200
     
     elif request.method == "PATCH":
         form_data = request.get_json()
+        sanitize_data(form_data)
         if 'name' in form_data:
             planet.name = request.json['name']
         if 'diameter' in form_data:
@@ -44,6 +46,7 @@ def handle_planet(planet_id):
     
     elif request.method == "PUT":
         form_data = request.get_json()
+        sanitize_data(form_data)
         planet.name = form_data["name"]
         planet.diameter = form_data["diameter"]
         planet.moons = form_data["moons"]
@@ -65,6 +68,7 @@ def handle_planet(planet_id):
 @planets_bp.route("", methods=["POST"])
 def create_planet():
     request_data = request.get_json()
+    sanitize_data(request_data)
 
     if "name" not in request_data or "moons" not in request_data \
         or "diameter" not in request_data or "picture" not in request_data:
@@ -103,3 +107,16 @@ def handle_planet_summary(planet_id):
                     title=planet.name,
                     diameter=planet.diameter,
                     moon=moon)
+
+
+def sanitize_data(input_data):
+    data_types = {"name":str, "diameter":str, "moons":bool, "picture":str}
+    for name, val_type in data_types.items():
+        try:
+            assert val_type==type(input_data[name])
+            print(name,type(input_data[name])) 
+            
+        except Exception as e:
+            print(e)
+            abort(400, "Bad Data")
+    return input_data
