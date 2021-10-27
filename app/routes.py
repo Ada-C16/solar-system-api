@@ -38,7 +38,9 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(f"Planet {new_planet.name} successfully created", 201)
+        new_planet_response = {"id" : 1, "name" : "Post", "description" :"Posty", "color" : "Postingggg"}
+
+        return jsonify(new_planet_response), 201
 
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
@@ -48,7 +50,7 @@ def handle_planet(planet_id):
     #this is where we tell it which id to grab
 
     if planet is None:
-        return make_response(f"Planet {planet.id} not found", 404)
+        return jsonify(f"Planet {planet_id} not found"), 404
 
     if request.method == "GET":
         return {  # we're returning a json object using the planet that we found
@@ -56,7 +58,7 @@ def handle_planet(planet_id):
             "name": planet.name,
             "description": planet.description,
             "color": planet.color
-        }
+        }, 200 #testing this
     elif request.method == "PUT":
         request_body = request.get_json()
         
