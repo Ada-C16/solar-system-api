@@ -4,12 +4,18 @@ from flask import Blueprint, jsonify, make_response, request, abort
 from app.models.planet import Planet
 from app import db
 
-
+# Global Vars
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
-# @blueprint_name.route("/endpoint/path/here", methods=["GET"])
 
+# Helper Functions
+def validate_int(user_input, attribute_name):
+    try:
+        user_input = int(user_input)
+    except:
+        abort(make_response({"error": "{attribute_name} must be an int"}, 404))
 
+# Routes
 @planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     request_body = request.get_json()
