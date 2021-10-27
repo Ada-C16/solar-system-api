@@ -27,35 +27,45 @@ def get_planets(): #function does the work
     planets = Planet.query.all()
 
     for planet in planets:
-        planets_response.append({
-            "id" : planet.id,
-            "name" : planet.name,
-            "description" : planet.description,
-            "num_moons" : planet.num_moons
-        })
+        planets_response.append(planet.to_dict())
     return jsonify(planets_response), 200
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
-def get_planet(planet_id):
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
+def handle_planet(planet_id):
     planet_id = int(planet_id)
-    planet = Planet.query.all(planet_id)
+    planet = Planet.query.get(planet_id)
     
-    if planet:
-        return {
-            "id" : planet.id,
-            "name" : planet.name,
-            "description" : planet.description,
-            "num_moons" : planet.num_moons
-            }, 200
-    
-    return f'Planet {planet_id} not found', 404
+    if not planet:
+        return {"error": f"Planet {planet_id} was not found"}, 404
+
+    if request.method == "GET":
+        return planet.to_dict(), 200
+    elif request.method == "PUT":
+        input_data = request.get_json()
+        if "name" in input_data:
+            planet.name = input_data["name"]
+        if "description" in input_data:
+            planet.description = input_data["description"]
+        if "num_moons" in input_data:
+            planet.num_moons = input_data["num_moons"]
+        db.session.commit()
+
+        return planet.to_dict(), 200
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+
+        return (f"Planet {planet.id} successfully updated"), 200
+
 
 @planets_bp.route("", methods=["POST"])
 def create_new_planet():
     request_body = request.get_json()
+    # if statement for 400
     new_planet = Planet(name = request_body["name"], description = request_body["description"], num_moons = request_body["num_moons"])
 
     db.session.add(new_planet)
     db.session.commit()
 
     return f"{new_planet.name} Successfully Created", 201
+
