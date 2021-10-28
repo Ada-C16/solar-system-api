@@ -54,3 +54,5 @@ def one_saved_planet(app):
     earth = Planet(name="earth", description="blue marble", moons=1)
     db.session.add(earth)
     db.session.commit()
+
+

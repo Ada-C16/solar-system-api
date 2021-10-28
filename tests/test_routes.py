@@ -37,3 +37,13 @@ def test_get_all_planets_returns_list_of_planets(client, one_saved_planet):
         "id": 1
         }
     ]
+
+def test_create_planet_returns_201(client):
+    request_body = {
+        "name": "Venus",
+        "description": "A day on Venus is longer than a year",
+        "moons": 0
+    }
+    response = client.post("/planets", json=request_body)
+
+    assert response.status_code == 201
