@@ -47,6 +47,7 @@ def handle_planets():
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT"])
 def handle_planet(planet_id):
+    
     planet_id=validate_id_int(planet_id)
     planet = Planet.query.get(planet_id)
     if not planet:
@@ -79,8 +80,10 @@ def delete_planet(planet_id):
 def validate_id_int(planet_id):
     try:
         planet_id = int(planet_id)
+        return planet_id
     except:
         abort(400, "Error: Planet ID needs to be a number")
+
 
 
         
