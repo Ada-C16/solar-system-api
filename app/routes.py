@@ -69,7 +69,7 @@ def read_all_planets():
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def read_a_planet(planet_id):
     planet = get_planet(planet_id)
-    return jsonify(planet.to_json(), 200)
+    return planet.to_json()
 
 @planets_bp.route("/<planet_id>", methods=["PATCH"])
 def update_a_planet(planet_id):

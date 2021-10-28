@@ -16,9 +16,9 @@ def test_get_one_planet(client, save_two_planets):
 
     #Assert
     assert response.status_code == 200
-    # assert response_body == {
-    #     'id' : 1,
-    #     'name' : 'Arrakis',
-    #     'description' : 'sand',
-    #     'xenomorphs' : False
-    # }
+    assert response_body == {
+        'id' : 1,
+        'name' : 'Arrakis',
+        'description' : 'sand',
+        'xenomorphs' : False
+    }
