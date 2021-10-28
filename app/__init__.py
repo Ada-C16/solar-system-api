@@ -1,20 +1,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate 
+from flask_migrate import Migrate
+from dotenv import load_dotenv
+import os
 
 # initialize sqlalchemy
 db = SQLAlchemy()
 migrate = Migrate()
+load_dotenv()
 
-# set the database connection string
-DATABASE_CONNECTION_STRING = 'postgresql+psycopg2://postgres:postgres@localhost:5432/our_universe'
 
 def create_app(test_config=None):
     app = Flask(__name__)
 
     # configure sql alchemy
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_CONNECTION_STRING
+    if not test_config:
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_CONNECTION_STRING')
+    else:
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('TEST_DATABASE_CONNECTION_STRING')
+        app.config['TESTING'] = True
 
     # import models
     from app.models.planet import Planet

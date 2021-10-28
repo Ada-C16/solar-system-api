@@ -60,4 +60,3 @@ def handle_planet(planet_id):
         db.session.commit()
 
         return jsonify(planet.create_planet_dictionary()), 200
-        
