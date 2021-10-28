@@ -1,6 +1,6 @@
 from app import db
 from app.models.planet import Planet
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, request
 
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
@@ -10,7 +10,7 @@ def handle_planets():
     if request.method == "POST":
         request_body = request.get_json()
         if "name" not in request_body or "description" not in request_body:
-            return jsonify("Invalid request"), 400
+            return jsonify("Invalid request"), 404
 
         new_planet = Planet(
             name=request_body["name"],
