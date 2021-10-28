@@ -21,4 +21,6 @@ def create_app(test_config=None):
 
     app.register_blueprint(planets_bp)
 
+    from app.models.planet import Planet
+
     return app
