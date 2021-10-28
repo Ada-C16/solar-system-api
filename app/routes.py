@@ -28,7 +28,8 @@ def add_planet():
         )
     db.session.add(new_planet)
     db.session.commit()
-    return make_response(f"Planet {new_planet.name} successfully created", 201)
+    # return make_response(f"Planet {new_planet.name} successfully created", 201)
+    return make_response({"planet": new_planet.to_dict()}, 201)
 
 @planets_bp.route("", methods=["GET"], strict_slashes=False)
 def get_all_planets():

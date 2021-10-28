@@ -1,3 +1,5 @@
+from app.models.planet import Planet
+
 def test_get_planets_returns_200_empty_array_when_db_is_empty(client):
     # act
     response = client.get("/planets")
@@ -50,21 +52,28 @@ def test_get_planets_with_valid_data_returns_correct_array(client, multiple_plan
         }
     ]
 
-# def test_post_planets_with_JSON_request_body_returns_201(client):
-#     # Act
-#     response = client.post("/planets", json={
-#         # "id": 1,
-#         "name": "Jupiter",
-#         "description": "A planet in the Milky Way",
-#         "size_rank": 1
-#     })
-#     response_body = response.get_json()
+def test_post_planet_with_JSON_request_body_returns_201(client):
+    # Act
+    response = client.post("/planets", json={
+        "name": "Jupiter",
+        "description": "A planet in the Milky Way",
+        "size_rank": 1
+    })
+    response_body = response.get_json()
 
-#     # Assert
-#     assert response.status_code == 201
-#     assert response_body == {
-#         "id": 1,
-#         "name": "Jupiter",
-#         "description": "A planet in the Milky Way",
-#         "size_rank": 1
-#     }
+    # Assert
+    assert response.status_code == 201
+    assert response_body == {
+        "planet": {
+            "id": 1,
+            "name": "Jupiter",
+            "description": "A planet in the Milky Way",
+            "size_rank": 1
+        }
+    }
+    new_planet = Planet.query.get(1)
+    assert new_planet
+    assert new_planet.id == 1
+    assert new_planet.name == "Jupiter"
+    assert new_planet.description == "A planet in the Milky Way"
+    assert new_planet.size_rank == 1
