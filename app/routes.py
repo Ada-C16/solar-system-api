@@ -46,7 +46,7 @@ def create_solarsystem():
     return f" Planet {new_planet.name} created", 201
 
 
-@solarsystem_bp.route("/<planet_id>", methods=["GET", "PUT"])  
+@solarsystem_bp.route("/<planet_id>", methods=["GET"])  
 def get_planet(planet_id):
     try:
         planet_id = int(planet_id)
@@ -54,25 +54,35 @@ def get_planet(planet_id):
         return {"Error": "Id must be numeric"}, 400
     planet = Planet.query.get(planet_id)
     if not planet:
-        return {"Error": f"PLanet {planet_id} was not found"}, 404
+        return {"Error": f"Planet with id number {planet_id} was not found"}, 404
     if request.method == "GET":
         return jsonify(planet.to_dict()), 200
-    elif request.method == "PUT":
-        form_data = request.get_json()
-        
-        if 'name' not in form_data or 'surface_area' not in form_data or 'orbital_period' not in form_data \
-        or 'distance_from_sun' not in form_data or 'radius' not in form_data:
-            return jsonify({'message': "missing data"}),400
-        
-        planet.name = form_data["name"],
-        planet.surface_area = form_data["surface_area"]
-        planet.orbital_period = form_data["orbital_period"]
-        planet.distance_from_sun = form_data["distance_from_sun"]
-        planet.radius = form_data["radius"]
 
-        db.session.commit()
+@solarsystem_bp.route("/<planet_id>", methods=["PUT"]) 
+def update_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"Error": "Id must be numeric"}, 400
+    planet = Planet.query.get(planet_id)
 
-        return jsonify(planet.to_dict()), 200
+    form_data = request.get_json()
+    
+    if 'name' not in form_data or 'surface_area' not in form_data or 'orbital_period' not in form_data \
+    or 'distance_from_sun' not in form_data or 'radius' not in form_data:
+        return jsonify({'message': "missing data"}),400
+    
+    planet.name = form_data["name"],
+    planet.surface_area = form_data["surface_area"]
+    planet.orbital_period = form_data["orbital_period"]
+    planet.distance_from_sun = form_data["distance_from_sun"]
+    planet.radius = form_data["radius"]
+
+    db.session.commit()
+
+    return jsonify(planet.to_dict()), 200
+
+
 
 
 
