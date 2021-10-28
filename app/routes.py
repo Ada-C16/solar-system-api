@@ -41,6 +41,7 @@ def create_planets():
 
     return make_response(f"Your planet, {new_planet.name}, has been created.", 201)
 
+
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
     
@@ -62,7 +63,7 @@ def read_all_planets():
     # if planets is None:
     #     return make_response("ENVIRON CTR PURGE", 404)
 
-    return jsonify(planets_response, 200)
+    return jsonify(planets_response)
 
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
