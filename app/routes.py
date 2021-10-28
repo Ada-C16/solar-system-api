@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 
 class Planet:
@@ -6,6 +6,13 @@ class Planet:
         self.id = id
         self.name = name
         self.description = description
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+        }
 
 
 planets = [
@@ -23,6 +30,7 @@ planets = [
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 
-@planets_bp.ropute("/planets", methods=["GET"])
+@planets_bp.route("", methods=["GET"])
 def handle_planets():
-    response_body = "Success"
+    planets_response = [planet.to_json() for planet in planets]
+    return jsonify(planets_response)
