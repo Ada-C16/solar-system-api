@@ -56,11 +56,11 @@ def read_all_planets():
 
     planets_response = []
 
-    # if planets is None:
-    #     return make_response("ENVIRON CTR PURGE", 404)
-
     for planet in planets:
         planets_response.append(planet.to_json())
+
+    # if planets is None:
+    #     return make_response("ENVIRON CTR PURGE", 404)
 
     return jsonify(planets_response, 200)
 
