@@ -28,6 +28,9 @@ def create_planets():
     if request_body is None:
         return make_response("Invalid Request", 404)
 
+    if "name" not in request_body or "description" not in request_body or "xenomorphs" not in request_body:
+        return make_response("Invalid Request", 404)
+
     new_planet = Planet(
         name=request_body['name'],
         description=request_body['description'],
@@ -54,8 +57,8 @@ def read_all_planets():
 
     planets_response = []
 
-    # if planets is None:
-    #     return make_response("ENVIRON CTR PURGE", 404)
+    if planets is None:
+        return make_response("ENVIRON CTR PURGE", 404)
 
     for planet in planets:
         planets_response.append(planet.to_json())
