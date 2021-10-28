@@ -6,7 +6,7 @@ import os
 
 db = SQLAlchemy()
 migrate = Migrate()
-database = 'postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_development'
+load_dotenv()
 
 def create_app(test_config=None):
     app = Flask(__name__)
