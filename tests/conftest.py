@@ -3,7 +3,7 @@ from app import create_app, db
 
 @pytest.fixture
 def app():
-    app = create_app(test_config=True)
+    app = create_app(True)
     with app.app_context():
         db.create_all()
         yield app
@@ -14,4 +14,4 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
-    
+
