@@ -30,16 +30,23 @@ def handle_solarsystem():
 
 @solarsystem_bp.route("", methods=["POST"])
 def create_solarsystem(): 
-    request_date = request.get_json()
-    if 'name' not in request_date or 'surface_area' not in request_date or 'orbital_period' not in request_date \
-        or 'distance_from_sun' not in request_date or 'radius' not in request_date:
+    request_data = request.get_json()
+    if 'name' not in request_data or 'surface_area' not in request_data or 'orbital_period' not in request_data \
+        or 'distance_from_sun' not in request_data or 'radius' not in request_data:
             return jsonify({'message': "missing data"}),400
+    if type(request_data['name']) != str  or type(request_data['surface_area']) != int or\
+        type(request_data['orbital_period']) != int or type(request_data['distance_from_sun']) != int\
+    or type(request_data['radius']) != int :
+        return jsonify({'message': "Unsupported data type"}),400
+    
+        
+        
     new_planet = Planet(
-        name= request_date['name'],
-        surface_area = request_date['surface_area'],
-        orbital_period = request_date['orbital_period'],
-        distance_from_sun = request_date['distance_from_sun'],
-        radius = request_date['radius']
+        name= request_data['name'],
+        surface_area = request_data['surface_area'],
+        orbital_period = request_data['orbital_period'],
+        distance_from_sun = request_data['distance_from_sun'],
+        radius = request_data['radius']
     )
     db.session.add(new_planet)
     db.session.commit()
@@ -72,6 +79,11 @@ def update_planet(planet_id):
     or 'distance_from_sun' not in form_data or 'radius' not in form_data:
         return jsonify({'message': "missing data"}),400
     
+    if type(form_data['name']) != str  or type(form_data['surface_area']) != int or\
+        type(form_data['orbital_period']) != int or type(form_data['distance_from_sun']) != int\
+    or type(form_data['radius']) != int :
+        return jsonify({'message': "Unsupported data type"}),400
+    
     planet.name = form_data["name"],
     planet.surface_area = form_data["surface_area"]
     planet.orbital_period = form_data["orbital_period"]
@@ -81,10 +93,6 @@ def update_planet(planet_id):
     db.session.commit()
 
     return jsonify(planet.to_dict()), 200
-
-
-
-
 
 @solarsystem_bp.route("/<planet_id>", methods=["DELETE"])
 def delete_planet(planet_id):
@@ -100,3 +108,7 @@ def delete_planet(planet_id):
 
     else:
         return {"Message": f"Planet with id number {planet_id} not found"}, 404
+    
+    
+
+        
