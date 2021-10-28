@@ -1,4 +1,3 @@
-# attribuites: id, name, description + 1
 from app import db
 
 class Planet(db.Model): 

@@ -1,5 +1,3 @@
-#create app function and registering blueprints
-# Step 1: import and initialize 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy 
 from flask_migrate import Migrate

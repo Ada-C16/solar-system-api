@@ -1,28 +1,11 @@
-#define our class and make bluprints
 from flask import Blueprint, jsonify, request
 from app.models.planets import Planet
 from app import db
 
-
-#class are capitalized
-# class Planet: 
-#     def __init__(self, id, name, description, num_moons):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.num_moons = num_moons
-
-# planets = [
-#     Planet(1, "Earth", "Green and Blue", 1), 
-#     Planet(2, "Mars", "Red and Orange", 2),
-#     Planet(3, "Jupiter", "Gray and Brown", 79)
-# ]
-
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
-
-@planets_bp.route("", methods=["GET"]) #decorator communicates with flask
-def get_planets(): #function does the work
+@planets_bp.route("", methods=["GET"])
+def get_planets(): 
     planets_response = []
     planets = Planet.query.all()
 
@@ -36,7 +19,7 @@ def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
     
     if not planet:
-        return {"error": f"Planet {planet_id} was not found"}, 404
+        return {"Error": f"Planet {planet_id} was not found"}, 404
 
     if request.method == "GET":
         return planet.to_dict(), 200
@@ -61,8 +44,12 @@ def handle_planet(planet_id):
 @planets_bp.route("", methods=["POST"])
 def create_new_planet():
     request_body = request.get_json()
-    # if statement for 400
-    new_planet = Planet(name = request_body["name"], description = request_body["description"], num_moons = request_body["num_moons"])
+    
+    try:
+        new_planet = Planet(name = request_body["name"], description = request_body["description"], num_moons = request_body["num_moons"])
+
+    except KeyError:
+        return ("Error! Must include data for all fields."), 400
 
     db.session.add(new_planet)
     db.session.commit()
