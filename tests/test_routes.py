@@ -20,3 +20,8 @@ def test_get_one_planet_by_id_returns_correct_planet(client, one_saved_planet):
         "moons": 1,
         "id": 1
     }
+
+
+def test_get_one_planet_by_id_with_empty_db_returns_404(client):
+    response = client.get("/planets/1")
+    assert response.status_code == 404
