@@ -25,10 +25,10 @@ def create_planets():
     request_body = request.get_json()
 
     if request_body is None:
-        return make_response("Invalid Request", 404)
+        return make_response("Invalid Request", 400)
 
     if "name" not in request_body or "description" not in request_body or "xenomorphs" not in request_body:
-        return make_response("Invalid Request", 404)
+        return make_response("Invalid Request", 400)
 
     new_planet = Planet(
         name=request_body['name'],
