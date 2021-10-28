@@ -15,11 +15,13 @@ def test_get_single_planet_returns_one_saved_planet(client, one_planet):
     # assert
     assert response.status_code == 200
     assert response.get_json() == {
-            "id": 1,
-            "name": "Jupiter",
-            "description": "A planet in the Milky Way",
-            "size_rank": 1
+            "planet": {
+                "id": 1,
+                "name": "Jupiter",
+                "description": "A planet in the Milky Way",
+                "size_rank": 1
         }
+    }
 
 def test_get_single_planet_with_empty_db_returns_404(client):
     # act

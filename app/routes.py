@@ -18,7 +18,6 @@ def get_planet_from_id(planet_id):
 
 # Routes
 @planets_bp.route("", methods=["POST"], strict_slashes=False)
-# def handle_planets():
 def add_planet():
     request_body = request.get_json()
     new_planet = Planet(
@@ -28,7 +27,6 @@ def add_planet():
         )
     db.session.add(new_planet)
     db.session.commit()
-    # return make_response(f"Planet {new_planet.name} successfully created", 201)
     return make_response({"planet": new_planet.to_dict()}, 201)
 
 @planets_bp.route("", methods=["GET"], strict_slashes=False)
@@ -39,12 +37,11 @@ def get_all_planets():
         response_list.append(planet.to_dict())
     return make_response(jsonify(response_list), 200)
 
-# @planets_bp.route("/<planet_id>", methods=["GET", "PATCH", "DELETE"],)
-
+# Routes for single planet
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_planet(planet_id):
     selected_planet = get_planet_from_id(planet_id)
-    return selected_planet.to_dict()
+    return make_response({"planet": selected_planet.to_dict()}, 200)
 
 @planets_bp.route("/<planet_id>", methods=["PATCH"])
 def update_planet(planet_id):
