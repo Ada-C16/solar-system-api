@@ -25,8 +25,18 @@ def handle_planets():
         return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT"])
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
+    if request.method == "GET":
+        return planet.to_json()
 
-    return planet.to_json()
+    elif request.method == "PUT":
+        form_data = request.get_json()
+
+        planet.name = form_data["name"]
+        planet.description = form_data["description"]
+
+        db.session.commit()
+
+        return make_response(f"Book #{planet.id} successfully updated")
