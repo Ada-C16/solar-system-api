@@ -9,15 +9,14 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 
 # Helper Functions
-def validate_int(user_input, attribute_name):
-    try:
-        user_input = int(user_input)
-    except:
-        abort(make_response({"error": "{attribute_name} must be an int"}, 404))
+# def validate_int(user_input, attribute_name):
+#     try:
+#         user_input = int(user_input)
+#     except:
+#         abort(make_response({"error": "{attribute_name} must be an int"}, 404))
 
 def get_planet(planet_id):
-    validate_int(planet_id, "id")
-
+    # validate_int(planet_id, "id")
     return Planet.query.get_or_404(planet_id, description="Planet does not exist.")
 
 # Routes
@@ -57,8 +56,8 @@ def read_all_planets():
 
     planets_response = []
 
-    if planets is None:
-        return make_response("ENVIRON CTR PURGE", 404)
+    # if planets is None:
+    #     return make_response("ENVIRON CTR PURGE", 404)
 
     for planet in planets:
         planets_response.append(planet.to_json())
@@ -86,7 +85,7 @@ def update_a_planet(planet_id):
         planet.xenomorphs = request_body["xenomorphs"]
 
     db.session.commit()
-    return jsonify(planet.to_json(), 201)
+    return make_response(f"Planet {planet.id} has been updated.", 201)
 
 
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
