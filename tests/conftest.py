@@ -1,8 +1,7 @@
 # file to store all my fixtures; confiure test: conftest
-
+# from flask import Flask
 import pytest
-from app import create_app
-from app import db
+from app import create_app, db
 from app.models.planet import Planet
 
 # app
