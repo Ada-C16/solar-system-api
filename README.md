@@ -1,6 +1,20 @@
 # Solar System API
 
-Here is a minimal setup for a Flask API.
+# Build
+Clone the forked repo and cd into it
+
+Recreate the following setup steps of the Solar System API repo:
+
+    Create a virtual environment and activate it
+    Install the dependencies
+    Define a Planet class with the attributes id, name, and description, and one additional attribute
+    Create a list of Planet instances
+    
+Create the following endpoints, with similar functionality presented in the Hello Books API:
+
+    As a client, I want to send a request to get all existing planets, so that I can see a list of planets, with their id, name, description, and other data of the planet.
+    As a client, I want to send a request to get one existing planet, so that I can see the id, name, description, and other data of the planet.
+    Here is a minimal setup for a Flask API.
 
 ## Github Setup
 
