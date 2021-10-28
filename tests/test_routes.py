@@ -63,6 +63,7 @@ def test_post_planet_with_JSON_request_body_returns_201(client):
 
     # Assert
     assert response.status_code == 201
+    assert "planet" in response_body
     assert response_body == {
         "planet": {
             "id": 1,
