@@ -17,7 +17,7 @@ def handle_planets():
                     "name": planet.name,
                     "description": planet.description
                 })
-        return make_response(f"All the planet {planets_response}" , 201)
+        return jsonify(planets_response)
     elif request.method == "POST":
         request_body = request.get_json()
         new_planet = Planet(name=request_body["name"],
@@ -30,7 +30,6 @@ def handle_planets():
  
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(planet_id):
-    # planet_id = int(planet_id)
     planet = Planet.query.get(planet_id)
 
     if planet == None:
@@ -60,15 +59,4 @@ def handle_planet(planet_id):
 
 
 
-   # elif request.method == "GET":
-    #     planets = Planet.query.all()
-    #     planets_response = []
-    #     for planet in planets:
-    #         planets_response.append(
-    #             {
-    #                 "id": planet.id,
-    #                 "name": planet.name,
-    #                 "description": planet.description
-    #             }
-    #         )
-    #     return jsonify(planets_response)
+  
