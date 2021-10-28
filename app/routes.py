@@ -6,14 +6,14 @@ planets_bp = Blueprint("Planet", __name__, url_prefix="/planets")
 
 
 # Helper Functions
-def valid_int(number, parameter_type):
+def valid_int(number):
     try:
         int(number)
     except:
-        abort(make_response({"error": f"{parameter_type} must be an int"}, 400))
+        abort(make_response({"error": f"{number} must be an int"}, 400))
 
 def get_planet_from_id(planet_id):
-    valid_int(planet_id, "planet_id")
+    valid_int(planet_id)
     return Planet.query.get_or_404(planet_id, description="{planet not found}")
 
 # Routes
