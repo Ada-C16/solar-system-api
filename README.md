@@ -1,3 +1,5 @@
+FLASK_APP=main.py FLASK_ENV=development flask run
+
 # Solar System API
 
 Here is a minimal setup for a Flask API.
