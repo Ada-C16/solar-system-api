@@ -15,7 +15,7 @@ def handle_planets():
 
         if "name" not in request_body or "description" not in request_body \
             or "moons" not in request_body: 
-            return jsonify({"message": "Missing data"}), 400
+            return make_response("Missing data", 400)
 
         new_planet = Planet(name=request_body["name"],
                         description=request_body["description"],
@@ -28,10 +28,10 @@ def handle_planets():
 
     elif request.method == "GET": 
         planets = Planet.query.all()
-        planets_response = []
+        planets_response = {}
         for planet in planets: 
-            planets_response.append(planet.to_dict())
-        return jsonify(planets_response), 200
+            planets_response[planet.name] = planet.to_dict()
+        return make_response(planets_response, 200)
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_one_planet(planet_id):
@@ -44,7 +44,7 @@ def handle_one_planet(planet_id):
     planet = Planet.query.get_or_404(planet_id)
 
     if request.method == "GET":
-        return jsonify(planet.to_dict()), 200
+        return make_response(planet.to_dict(), 200)
     
     elif request.method == "PUT": 
         form_data = request.get_json()
@@ -55,10 +55,10 @@ def handle_one_planet(planet_id):
 
         db.session.commit()
 
-        return make_response(f"Planet {planet.name} successfully updated")
+        return make_response(f"Planet {planet.name} successfully updated", 200)
 
     elif request.method == "DELETE": 
         db.session.delete(planet)
         db.session.commit()
 
-        return make_response(f"Planet {planet.name} successfully deleted")
+        return make_response(f"Planet {planet.name} successfully deleted", 200)
