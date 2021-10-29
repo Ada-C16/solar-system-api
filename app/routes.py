@@ -1,13 +1,13 @@
 from flask import Blueprint, jsonify
-#from planets import Planet
+from planets import Planet
 
 
-class Planet:
-    def __init__(self, id, name, description, oxygen):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.oxygen = oxygen
+# class Planet:
+#     def __init__(self, id, name, description, oxygen):
+#         self.id = id
+#         self.name = name
+#         self.description = description
+#         self.oxygen = oxygen
 
 
 planet1 = Planet(1, "mecury", "its a pretty planet", 0.2)
@@ -35,6 +35,15 @@ def get_all_planets():
 
     return jsonify(books_response)
 
-
+@planets_bp.route("/<planet_name>", methods = ["GET"])
+def get_planet_by_name(planet_name):
+    for planet in list_of_planets:
+        if planet.name == planet_name:
+            return {
+                "id" : planet.id,
+                "name": planet.name,
+                "description" : planet.description,
+                "oxygen_level" : planet.oxygen
+            }
 
 
