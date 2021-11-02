@@ -38,7 +38,12 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
-        new_planet_response = {"id" : 1, "name" : "Post", "description" :"Posty", "color" : "Postingggg"}
+        new_planet_response = { 
+            "id": new_planet.id,
+            "name": new_planet.name,
+            "description": new_planet.description,
+            "color": new_planet.color
+        }
 
         return jsonify(new_planet_response), 201
 
