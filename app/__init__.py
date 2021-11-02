@@ -3,19 +3,26 @@ from flask import Flask
 # Import and initialize SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from dotenv import load_dotenv
+import os
 
 # Initialize SQLAlchemy
 db = SQLAlchemy()
 migrate = Migrate()
-DATABASE_CONNECTION_STRING='postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_development'
+load_dotenv()
 
 def create_app(test_config=None):
     app = Flask(__name__)
-
+    
     # Step 2:
     # Configure SQLAlchemy
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_CONNECTION_STRING
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    
+    if not test_config:
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_CONNECTION_STRING")
+    else:
+        app.config["TESTING"]=True
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_TEST_CONNECTION_STRING")
 
     # Import Models here!
     from app.models.planet import Planet
