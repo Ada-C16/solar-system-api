@@ -11,9 +11,7 @@ def test_get_one_planet_with_two_records(client, two_saved_planets):
     response_body = response.get_json()
 
     assert response.status_code == 200
-    assert response_body == {
-        "id": 1,
-        "name": "Earth",
-        "description": "Its a planet",
-        "distance_from_sun": 92
-    }
+    assert response_body["id"] == 1
+    assert response_body["name"] == "Earth"
+    assert response_body["description"] == "Its a planet"
+    assert response_body["distance_from_sun"] == 92
