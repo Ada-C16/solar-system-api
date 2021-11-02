@@ -4,8 +4,6 @@ from app import db
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
-
 @planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     
@@ -26,14 +24,14 @@ def handle_planets():
             return jsonify("Invalid Request"), 400
             
         new_planet = Planet(
-            name = request_body["name"],
-            description = request_body["description"],
-            has_moons = request_body["has_moons"]
+            name=request_body["name"],
+            description=request_body["description"],
+            has_moons=request_body["has_moons"]
         )
 
         db.session.add(new_planet)
         db.session.commit()
-
+        
         return jsonify(f"created {new_planet.name}"), 201
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])

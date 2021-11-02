@@ -21,4 +21,3 @@ def test_get_one_planet(client, two_saved_planets):
         "description": "Got the spice",
         "has_moons": True
     }
-
