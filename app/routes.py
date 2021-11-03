@@ -20,7 +20,7 @@ def read_planets():
         db.session.commit()
 
         return make_response(f"Planet {new_planet.name} created!", 201)
-
+        
     elif request.method == "GET":
         planets = Planet.query.all()
         planets_response = []
