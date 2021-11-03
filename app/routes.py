@@ -62,8 +62,8 @@ def get_planet(planet_id):
     planet = Planet.query.get(planet_id)
     if not planet:
         return {"Error": f"Planet with id number {planet_id} was not found"}, 404
-    if request.method == "GET":
-        return jsonify(planet.to_dict()), 200
+    
+    return jsonify(planet.to_dict()), 200
 
 @solarsystem_bp.route("/<planet_id>", methods=["PUT"]) 
 def update_planet(planet_id):
