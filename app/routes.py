@@ -36,7 +36,7 @@ def handle_planets():
                     "color": planet.color
                 }
             )
-        return jsonify(planets_response)
+        return jsonify(planets_response,200)
         
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(planet_id):
