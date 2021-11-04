@@ -1,2 +1,114 @@
-from flask import Blueprint
+from app import db
+from flask import Blueprint, jsonify, request,make_response
+from app.models.planet import Planet
 
+solarsystem_bp = Blueprint("solarsystem", __name__, url_prefix="/solarsystem")
+
+
+@solarsystem_bp.route("", methods=["GET"])
+def handle_solarsystem():
+    requested_name = request.args.get('name')
+    shorter_orbital_period=request.args.get("shorter_orbital_period")
+    if requested_name:
+        requested_name = requested_name.capitalize()
+        planets=Planet.query.filter_by(name=requested_name)
+    elif shorter_orbital_period:
+        try:
+            shorter_orbital_period = int(shorter_orbital_period)
+        except ValueError:
+            return {"Error": "Orbital period must be numeric"}, 400
+        planets=Planet.query.filter(Planet.orbital_period < request.args.get("shorter/orbital_period"))
+    elif request.args.get("order_by") == "name":
+        planets = Planet.query.order_by(Planet.name.desc())
+    else:
+        planets = Planet.query.all()
+    solarsystem_response = [] 
+    for planet in planets:
+        solarsystem_response.append(planet.to_dict())
+        
+    return jsonify(solarsystem_response) 
+
+@solarsystem_bp.route("", methods=["POST"])
+def create_solarsystem(): 
+    request_data = request.get_json()
+    if 'name' not in request_data or 'surface_area' not in request_data or 'orbital_period' not in request_data \
+        or 'distance_from_sun' not in request_data or 'radius' not in request_data:
+            return jsonify({'message': "missing data"}),400
+    if type(request_data['name']) != str  or type(request_data['surface_area']) != int or\
+        type(request_data['orbital_period']) != int or type(request_data['distance_from_sun']) != int\
+    or type(request_data['radius']) != int :
+        return jsonify({'message': "Unsupported data type"}),400
+    
+        
+        
+    new_planet = Planet(
+        name= request_data['name'],
+        surface_area = request_data['surface_area'],
+        orbital_period = request_data['orbital_period'],
+        distance_from_sun = request_data['distance_from_sun'],
+        radius = request_data['radius']
+    )
+    db.session.add(new_planet)
+    db.session.commit()
+    return f" Planet {new_planet.name} created", 201
+
+
+@solarsystem_bp.route("/<planet_id>", methods=["GET"])  
+def get_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"Error": "Id must be numeric"}, 400
+    planet = Planet.query.get(planet_id)
+    if not planet:
+        return {"Error": f"Planet with id number {planet_id} was not found"}, 404
+    
+    return jsonify(planet.to_dict()), 200
+
+@solarsystem_bp.route("/<planet_id>", methods=["PUT"]) 
+def update_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"Error": "Id must be numeric"}, 400
+    planet = Planet.query.get(planet_id)
+
+    form_data = request.get_json()
+    
+    if 'name' not in form_data or 'surface_area' not in form_data or 'orbital_period' not in form_data \
+    or 'distance_from_sun' not in form_data or 'radius' not in form_data:
+        return jsonify({'message': "missing data"}),400
+    
+    if type(form_data['name']) != str  or type(form_data['surface_area']) != int or\
+        type(form_data['orbital_period']) != int or type(form_data['distance_from_sun']) != int\
+    or type(form_data['radius']) != int :
+        return jsonify({'message': "Unsupported data type"}),400
+    
+    planet.name = form_data["name"],
+    planet.surface_area = form_data["surface_area"]
+    planet.orbital_period = form_data["orbital_period"]
+    planet.distance_from_sun = form_data["distance_from_sun"]
+    planet.radius = form_data["radius"]
+
+    db.session.commit()
+
+    return jsonify(planet.to_dict()), 200
+
+@solarsystem_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"Error": "Id must be numeric"}, 400
+    planet = Planet.query.get(planet_id)
+    if planet:
+        db.session.delete(planet)
+        db.session.commit()
+        return {"Message": f"Planet with id number {planet_id} deleted."}, 200
+
+    else:
+        return {"Message": f"Planet with id number {planet_id} not found"}, 404
+    
+    
+
+        
