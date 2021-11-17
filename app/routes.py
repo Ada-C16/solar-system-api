@@ -1,13 +1,13 @@
 from flask import Blueprint, jsonify
-from planets import Planet
+#from planets import Planet
 
 
-# class Planet:
-#     def __init__(self, id, name, description, oxygen):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.oxygen = oxygen
+class Planet:
+    def __init__(self, id, name, description, oxygen):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.oxygen = oxygen
 
 
 planet1 = Planet(1, "mecury", "its a pretty planet", 0.2)
