@@ -1,0 +1,55 @@
+{
+    "name": "Mercury", 
+    "diameter":"Diameter: 3,031 miles (4,878 km)", 
+    "moons": false, 
+    "picture":"https://cdn.mos.cms.futurecdn.net/oU94fqcyf9HzQc59wJyaHN-970-80.jpg"
+}
+
+{
+    "name": "Venus", 
+    "diameter": "Diameter: 7,521 miles (12,104 km)", 
+    "moons": false, 
+    "picture": "https://cdn.mos.cms.futurecdn.net/KhHofvaDG73pypCEzyLuab-970-80.png"
+}
+
+{
+    "name": "Earth", 
+    "diameter": "Diameter: 7,926 miles (12,760 km)", 
+    "moons": true, 
+    "picture": "https://cdn.mos.cms.futurecdn.net/4aeTmiqCqpRKuFc8tkDcmm-970-80.jpg"
+}
+
+{
+    "name": "Mars", 
+    "diameter": "Diameter: 4,217 miles (6,787 km)", 
+    "moons": true, 
+    "picture": "https://cdn.mos.cms.futurecdn.net/tQUhJUq9GXqMfZXjGYdw8c-970-80.jpg"
+}
+
+{
+    "name": "Jupiter", 
+    "diameter":"Diameter: 86,881 miles (139,822 km)", 
+    "moons": true, 
+    "picture":"https://cdn.mos.cms.futurecdn.net/WyxFYsiUAQAgU4peSSoBNZ-970-80.png"
+}
+
+{
+    "name": "Saturn", 
+    "diameter":"Diameter: 74,900 miles (120,500 km)", 
+    "moons": true, 
+    "picture":"https://cdn.mos.cms.futurecdn.net/bDVqRSjnbY9jMyVPmStUBY-970-80.png"
+}
+
+{
+    "name": "Uranus", 
+    "diameter":"Diameter: 31,763 miles (51,120 km)", 
+    "moons": true, 
+    "picture":"https://cdn.mos.cms.futurecdn.net/kZXxHS85dDgVEAviQrM2KW-970-80.jpg"
+}
+
+{
+    "name": "Neptune", 
+    "diameter":"Diameter: 30,775 miles (49,530 km)", 
+    "moons": true, 
+    "picture":"https://cdn.mos.cms.futurecdn.net/KW2AU72GRriUXQvsn5jAbg-970-80.jpg"
+}
