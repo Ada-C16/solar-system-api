@@ -1,10 +1,4 @@
 from app import db
-# class Planet:
-#     def __init__(self, id, name, description, oxygen):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.oxygen = oxygen
 
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True )
