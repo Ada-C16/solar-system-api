@@ -47,14 +47,35 @@ def test_route_returns_404_for_unavailable_planet_id(client, two_saved_planets):
     assert response.status_code == 404
     assert response_body == None
 
-def test_route_gets_planet_by_name_returns_planet_with_matching_name(client, two_saved_planets):
-    response = client.get("/planets", json = {"name":"Earth"})
+def test_route_returns_404_for_no_book_in_dabatase(client):
+    response = client.get("/planets/1")
     response_body = response.get_json()
 
-    assert response.status_code == 200
-    assert response_body == [{
+    assert response.status_code == 404
+    assert response_body == None
+
+# def test_route_gets_planet_by_name_returns_planet_with_matching_name(client, two_saved_planets):
+#     response = client.get("/planets", json = {"name":"Earth"})
+#     response_body = response.get_json()
+
+#     assert response.status_code == 200
+#     assert response_body == [{
+#         "id" : 1,
+#         "name" :"Earth",
+#         "description" : "blue and green",
+#         "oxygen_level" : "21%"
+#     }]
+
+def test_route_posts_data_to_database(client):
+    data = {
         "id" : 1,
         "name" :"Earth",
         "description" : "blue and green",
         "oxygen_level" : "21%"
-    }]
+    }
+
+    response = client.post("/planets", json = data)
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == None
