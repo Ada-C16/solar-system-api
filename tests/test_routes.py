@@ -54,17 +54,17 @@ def test_route_returns_404_for_no_book_in_dabatase(client):
     assert response.status_code == 404
     assert response_body == None
 
-# def test_route_gets_planet_by_name_returns_planet_with_matching_name(client, two_saved_planets):
-#     response = client.get("/planets", json = {"name":"Earth"})
-#     response_body = response.get_json()
+def test_route_gets_planet_by_name_returns_planet_with_matching_name(client, two_saved_planets): #figure out testing with search for name
+    response = client.get("/planets?name=Earth")
+    response_body = response.get_json()
 
-#     assert response.status_code == 200
-#     assert response_body == [{
-#         "id" : 1,
-#         "name" :"Earth",
-#         "description" : "blue and green",
-#         "oxygen_level" : "21%"
-#     }]
+    assert response.status_code == 200
+    assert response_body == [{
+        "id" : 1,
+        "name" :"Earth",
+        "description" : "blue and green",
+        "oxygen_level" : "21%"
+    }]
 
 def test_route_posts_data_to_database(client):
     data = {
