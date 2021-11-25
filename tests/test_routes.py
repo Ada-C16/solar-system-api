@@ -54,7 +54,7 @@ def test_route_returns_404_for_no_book_in_dabatase(client):
     assert response.status_code == 404
     assert response_body == None
 
-def test_route_gets_planet_by_name_returns_planet_with_matching_name(client, two_saved_planets): #figure out testing with search for name
+def test_route_gets_planet_by_name_returns_planet_with_matching_name(client, two_saved_planets): 
     response = client.get("/planets?name=Earth")
     response_body = response.get_json()
 
